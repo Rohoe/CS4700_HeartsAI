@@ -2,6 +2,7 @@ from Deck import Deck
 from Card import Card, Suit, Rank
 from Player import Player
 from Trick import Trick
+from PlayerTypes import PlayerTypes
 
 '''
 Change auto to False if you would like to play the game manually.
@@ -36,7 +37,7 @@ class Hearts:
 
 		# Make four players
 
-		self.players = [Player("Player 1"), Player("Player 2"), Player("Player 3"), Player("Player 4")]
+		self.players = [Player("Player 1", PlayerTypes.Human), Player("Player 2", PlayerTypes.Human), Player("Player 3", PlayerTypes.Human), Player("Player 4", PlayerTypes.Human)]
 
 		'''
 		Player physical locations:
@@ -175,7 +176,6 @@ class Hearts:
 
 
 				addCard = curPlayer.play(auto=auto) # change auto to False to play manually
-
 
 				# the rules for what cards can be played
 				# card set to None if it is found to be invalid

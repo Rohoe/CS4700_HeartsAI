@@ -1,12 +1,14 @@
 from Hand import Hand
+from PlayerTypes import PlayerTypes
 
 class Player:
-	def __init__(self, name, auto=False):
+	def __init__(self, name, player_type):
 			self.name = name
 			self.hand = Hand()
 			self.score = 0
 			self.roundscore = 0
 			self.tricksWon = []
+			self.type = player_type
 
 	def addCard(self, card):
 		self.hand.addCard(card)

@@ -32,6 +32,9 @@ class Trick:
 		self.suit = card.suit
 
 	def addCard(self, card, index):
+
+		#Update all player states
+
 		if self.cardsInTrick == 0: # if this is the first card added, set the trick suit
 			self.setTrickSuit(card)
 			print 'Current trick suit:', self.suit
