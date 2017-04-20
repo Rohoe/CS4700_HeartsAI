@@ -1,5 +1,6 @@
 from Hand import Hand
 from PlayerTypes import PlayerTypes
+import State
 
 class Player:
 	def __init__(self, name, player_type):
@@ -26,6 +27,9 @@ class Player:
 	def random_play(self):
 		return self.hand.getRandomCard()
 
+	def naiveMinAI_play(self):
+		return None
+
 	def play(self, option='play', c=None, auto=False):
 
 		card = None
@@ -36,6 +40,8 @@ class Player:
 			card = self.human_play(option)
 		elif self.type is PlayerTypes.Random:
 			card = self.random_play()
+		elif self.type is Player.Types.NaiveMinAI:
+			card = self.naiveMinAI_play()
 		if self.type is PlayerTypes.Human:
 			card = self.hand.playCard(card)
 		return card

@@ -3,6 +3,7 @@ from Card import Card, Suit, Rank
 from Player import Player
 from Trick import Trick
 from PlayerTypes import PlayerTypes
+import State
 
 '''
 Change auto to False if you would like to play the game manually.
@@ -19,8 +20,6 @@ queen = 12
 noSuit = 0
 spades = 2
 hearts = 3
-#cardsToPass = 3
-gameState = None
 
 #Only necessary state is the current trick and all previously played tricks.
 class Hearts:
@@ -275,7 +274,7 @@ class Hearts:
 
 def main():
 	hearts = Hearts()
-	gameState = hearts
+	State.state = hearts
 
 	# play until someone loses
 	while hearts.losingPlayer is None or hearts.losingPlayer.score < maxScore:
