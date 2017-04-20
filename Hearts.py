@@ -20,7 +20,9 @@ noSuit = 0
 spades = 2
 hearts = 3
 #cardsToPass = 3
+gameState = None
 
+#Only necessary state is the current trick and all previously played tricks.
 class Hearts:
 	def __init__(self):
 
@@ -28,7 +30,9 @@ class Hearts:
 		self.trickNum = 0 # initialization value such that first round is round 0
 		self.dealer = -1 # so that first dealer is 0
 		#self.passes = [1, -1, 2, 0] # left, right, across, no pass
+		self.allTricks = []
 		self.currentTrick = Trick()
+		self.allTricks < self.currentTrick
 		self.trickWinner = -1
 		self.heartsBroken = False
 		self.losingPlayer = None
@@ -37,7 +41,7 @@ class Hearts:
 
 		# Make four players
 
-		self.players = [Player("Player 1", PlayerTypes.Human), Player("Player 2", PlayerTypes.Human), Player("Player 3", PlayerTypes.Human), Player("Player 4", PlayerTypes.Human)]
+		self.players = [Player("Player 1", PlayerTypes.Random), Player("Player 2", PlayerTypes.Random), Player("Player 3", PlayerTypes.Random), Player("Player 4", PlayerTypes.Random)]
 
 		'''
 		Player physical locations:
@@ -83,6 +87,7 @@ class Hearts:
 		self.dealer = (self.dealer + 1) % len(self.players)
 		self.dealCards()
 		self.currentTrick = Trick()
+		self.allTricks = []
 		#self.passingCards = [[], [], [], []]
 		for p in self.players:
 			p.discardTricks()
@@ -107,6 +112,7 @@ class Hearts:
 		print p.name + " won the trick."
 		# print 'Making new trick'
 		self.currentTrick = Trick()
+		self.allTricks < self.currentTrick
 		print self.currentTrick.suit
 
 
@@ -269,6 +275,7 @@ class Hearts:
 
 def main():
 	hearts = Hearts()
+	gameState = hearts
 
 	# play until someone loses
 	while hearts.losingPlayer is None or hearts.losingPlayer.score < maxScore:

@@ -20,14 +20,23 @@ class Player:
 			card = raw_input(self.name + ", select a card to " + option + ": ")
 		return card
 
+	def human_play(self, option):
+		return self.getInput(option)
+
+	def random_play(self):
+		return self.hand.getRandomCard()
+
 	def play(self, option='play', c=None, auto=False):
-		if auto:
-			card = self.hand.getRandomCard()
-		elif c is None:
-			card = self.getInput(option)
-		else:
+
+		card = None
+		if c is not None:
 			card = c
-		if not auto:
+			card = self.hand.playCard(card)
+		elif self.type is PlayerTypes.Human:
+			card = self.human_play(option)
+		elif self.type is PlayerTypes.Random:
+			card = self.random_play()
+		if self.type is PlayerTypes.Human:
 			card = self.hand.playCard(card)
 		return card
 
