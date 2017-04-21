@@ -129,8 +129,8 @@ class Hand:
 				self.updateHand()
 
 	def hasOnlyHearts(self):
-		print "len(self.hearts):",len(self.hearts)
-		print "self.size():",self.size()
+		# print "len(self.hearts):",len(self.hearts)
+		# print "self.size():",self.size()
 		return len(self.hearts) == self.size()
 
 

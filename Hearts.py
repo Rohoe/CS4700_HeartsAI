@@ -47,7 +47,7 @@ class Hearts:
 
 		# Make four players
 
-		self.players = oneHuman
+		self.players = allRandom
 
 		'''
 		Player physical locations:
@@ -180,7 +180,9 @@ class Hearts:
 					return False
 
 		# player tries to play off suit but has trick suit
-		if self.currentTrick.suit != Suit(noSuit) and card.suit != self.currentTrick.suit:
+		print(self.currentTrick.suit)
+		print (card.suit)
+		if self.currentTrick.suit != Suit(-1) and card.suit != self.currentTrick.suit:
 			 if player.hasSuit(self.currentTrick.suit):
 			 	 print "Must play the suit of the current trick."
 			 	 return False
@@ -227,59 +229,25 @@ class Hearts:
 
 
 				addCard = curPlayer.play(auto=auto) # change auto to False to play manually
+				print(addCard)
 
 				# the rules for what cards can be played
 				# card set to None if it is found to be invalid
 				if addCard is not None:
 
-					# if it is not the first trick and no cards have been played,
-					# set the first card played as the trick suit if it is not a heart
-					# or if hearts have been broken
-					if self.trickNum != 0 and self.currentTrick.cardsInTrick == 0:
-						if addCard.suit == Suit(hearts) and not self.heartsBroken:
-							# if player only has hearts but hearts have not been broken,
-							# player can play hearts
-							if not curPlayer.hasOnlyHearts():
-								# print curPlayer.hasOnlyHearts()
-								# print curPlayer.hand.__str__()
-								print "Hearts have not been broken."
-								addCard = None
-							else:
-								self.currentTrick.setTrickSuit(addCard)
-						else:
-							self.currentTrick.setTrickSuit(addCard)
+					#set to None if card is invalid based on rules
+					if self.isValidCard(addCard, curPlayer) == False:
+						addCard = None
+					else: 
+						#change game state according to card
 
-					# player tries to play off suit but has trick suit
-					if addCard is not None and addCard.suit != self.currentTrick.suit:
-						if curPlayer.hasSuit(self.currentTrick.suit):
-							print "Must play the suit of the current trick."
-							addCard = None
-						elif addCard.suit == Suit(hearts):
+						#hearts broken
+						if addCard.suit == Suit(hearts):
+							self.heartsBroken = True
+						if addCard.suit == Suit(spades) and addCard.rank == Rank(queen):
 							self.heartsBroken = True
 
-					if self.trickNum == 0:
-						if addCard is not None:
-							if addCard.suit == Suit(hearts):
-								print "Hearts cannot be broken on the first hand."
-								self.heartsBroken = False
-								addCard = None
-							elif addCard.suit == Suit(spades) and addCard.rank == Rank(queen):
-								print "The queen of spades cannot be played on the first hand."
-								addCard = None
-
-					if addCard is not None and self.currentTrick.suit == Suit(noSuit):
-						if addCard.suit == Suit(hearts) and not self.heartsBroken:
-							print "Hearts not yet broken."
-							addCard = None
-
-
-
-					if addCard is not None:
-						if addCard == Card(queen, spades):
-							self.heartsBroken = True
-						curPlayer.removeCard(addCard)
-
-
+			curPlayer.removeCard(addCard)
 			self.currentTrick.addCard(addCard, curPlayerIndex)
 
 		self.evaluateTrick()
