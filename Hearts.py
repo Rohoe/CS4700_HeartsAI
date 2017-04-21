@@ -21,6 +21,13 @@ noSuit = 0
 spades = 2
 hearts = 3
 
+allRandom = [Player("Player 1", PlayerTypes.Random), Player("Player 2", PlayerTypes.Random), 
+						 Player("Player 3", PlayerTypes.Random), Player("Player 4", PlayerTypes.Random)]
+allHuman = [Player("Player 1", PlayerTypes.Human), Player("Player 2", PlayerTypes.Human), 
+					  Player("Player 3", PlayerTypes.Human), Player("Player 4", PlayerTypes.Human)]
+oneHuman = [Player("Player 1", PlayerTypes.Human), Player("Player 2", PlayerTypes.Random), 
+					  Player("Player 3", PlayerTypes.Random), Player("Player 4", PlayerTypes.Random)]
+
 #Only necessary state is the current trick and all previously played tricks.
 class Hearts:
 	def __init__(self):
@@ -40,7 +47,7 @@ class Hearts:
 
 		# Make four players
 
-		self.players = [Player("Player 1", PlayerTypes.Random), Player("Player 2", PlayerTypes.Random), Player("Player 3", PlayerTypes.Random), Player("Player 4", PlayerTypes.Random)]
+		self.players = oneHuman
 
 		'''
 		Player physical locations:
@@ -158,6 +165,45 @@ class Hearts:
 			self.distributePassedCards()
 			self.printPlayers()
 
+	#TO BE IMPLEMENTED: check if a card is a valid play in the current state
+	def isValidCard(self, card, player):
+		if card is None:
+			return False
+
+		# if it is not the first trick and no cards have been played:
+		if self.trickNum != 0 and self.currentTrick.cardsInTrick == 0:
+			if card.suit == Suit(hearts) and not self.heartsBroken:
+				# if player only has hearts but hearts have not been broken,
+				# player can play hearts
+				if not player.hasOnlyHearts():
+					print "Hearts have not been broken."
+					return False
+
+		# player tries to play off suit but has trick suit
+		if self.currentTrick.suit != Suit(noSuit) and card.suit != self.currentTrick.suit:
+			 if player.hasSuit(self.currentTrick.suit):
+			 	 print "Must play the suit of the current trick."
+			 	 return False
+
+		#Can't play hearts or queen of spades on first hand
+		if self.trickNum == 0:
+			if card.suit == Suit(hearts):
+				print "Hearts cannot be broken on the first hand."
+				return False
+			elif card.suit == Suit(spades) and card.rank == Rank(queen):
+				print "The queen of spades cannot be played on the first hand."
+				return False
+
+	  #Can't lead with hearts unless hearts broken
+		if self.currentTrick.cardsInTrick == 0:
+			if card.suit == Suit(hearts) and not self.heartsBroken:
+				print "Hearts not yet broken."
+				return False
+
+		#Valid otherwise
+		return True
+
+	#Can be edited to use isValidCard to make method more efficient
 	def playTrick(self, start):
 		shift = 0
 		if self.trickNum == 0:

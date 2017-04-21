@@ -21,13 +21,13 @@ class Player:
 			card = raw_input(self.name + ", select a card to " + option + ": ")
 		return card
 
-	def human_play(self, option):
+	def humanPlay(self, option):
 		return self.getInput(option)
 
-	def random_play(self):
+	def randomPlay(self):
 		return self.hand.getRandomCard()
 
-	def naiveMinAI_play(self):
+	def naiveMinAIPlay(self):
 		return None
 
 	def play(self, option='play', c=None, auto=False):
@@ -36,13 +36,13 @@ class Player:
 		if c is not None:
 			card = c
 			card = self.hand.playCard(card)
-		elif self.type is PlayerTypes.Human:
-			card = self.human_play(option)
-		elif self.type is PlayerTypes.Random:
-			card = self.random_play()
-		elif self.type is Player.Types.NaiveMinAI:
-			card = self.naiveMinAI_play()
-		if self.type is PlayerTypes.Human:
+		elif self.type == PlayerTypes.Human:
+			card = self.humanPlay(option)
+		elif self.type == PlayerTypes.Random:
+			card = self.randomPlay()
+		elif self.type == Player.Types.NaiveMinAI:
+			card = self.naiveMinAIPlay()
+		if self.type == PlayerTypes.Human:
 			card = self.hand.playCard(card)
 		return card
 
