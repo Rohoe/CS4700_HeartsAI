@@ -96,16 +96,17 @@ class Player:
 				return Hand.lowestCard(validHand[trickSuit])
 			else:
 				print("No cards in trick suit")
-				#play card with highest point value
+
+				#play cards by points, followed by rank
 				maxPoints = -sys.maxsize
 				maxCard = None
 				for suit in range(0,4):
 					for card in validHand[suit]:
-						cardPoints = 0
+						cardPoints = card.rank.rank
 						if card.suit == Card.Suit(hearts):
-							cardPoints = 1
+							cardPoints += 15 #Greater than rank of all non-point cards
 						if card.suit == Card.Suit(spades) and card.rank == Card.Rank(queen):
-							cardPoints = 13
+							cardPoints += 13
 						if cardPoints > maxPoints:
 							maxPoints = cardPoints
 							maxCard = card

@@ -156,4 +156,16 @@ class Hand:
 		# if min_card is None: print("min card is none!")
 		return min_card
 
+	@staticmethod
+	#takes in a hand of cards split in to 4 suit arrays and returns a random card
+	def randomCard(validHand):
+		suit = randint(0,3)
+		suit = validHand[suit]
+		while len(suit) == 0:
+			suit = randint(0,3)
+			suit = validHand[suit] 
+		index = randint(0, len(suit)-1)
+		return suit[index]
+
+
 
