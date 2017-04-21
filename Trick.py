@@ -1,4 +1,5 @@
 from Card import Card, Suit
+from Variables import *
 
 hearts = 3 # the corresponding index to the suit hearts
 spades = 2
@@ -38,7 +39,8 @@ class Trick:
 
 		if self.cardsInTrick == 0: # if this is the first card added, set the trick suit
 			self.setTrickSuit(card)
-			print 'Current trick suit:', self.suit
+			if printsOn:
+				print 'Current trick suit:', self.suit
 		
 		self.trick[index] = card
 		self.cardsInTrick += 1
@@ -52,4 +54,5 @@ class Trick:
 			if card.rank.rank > self.highest:
 				self.highest = card.rank.rank
 				self.winner = index
-				print "Highest:",self.highest
+				if printsOn:
+					print "Highest:",self.highest

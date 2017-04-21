@@ -5,12 +5,7 @@ from PlayerTypes import PlayerTypes
 import State
 import Card
 import sys
-
-queen = 12
-clubs = 0
-diamonds = 1
-spades = 2
-hearts = 3
+from Variables import *
 
 class Player:
 	def __init__(self, name, player_type):
@@ -71,7 +66,7 @@ class Player:
 				if gameState.isValidCard(card,self):
  					validHand[suit].append(card)
 
- 		self.print_hand(validHand)
+ 		# self.print_hand(validHand)
 
 		#if first, play lowest card in a random suit
 		if gameState.currentTrick.isUnset():
@@ -92,10 +87,10 @@ class Player:
 			trickSuit = gameState.currentTrick.suit.iden
 			#if there are cards in the trick suit play lowest card in trick suit
 			if(len(validHand[trickSuit]) > 0):
-				print("Still cards in trick suit")
+				# print("Still cards in trick suit")
 				return Hand.lowestCard(validHand[trickSuit])
 			else:
-				print("No cards in trick suit")
+				# print("No cards in trick suit")
 
 				#play cards by points, followed by rank
 				maxPoints = -sys.maxsize
