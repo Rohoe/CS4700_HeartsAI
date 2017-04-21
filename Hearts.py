@@ -4,6 +4,7 @@ from Card import Card, Suit, Rank
 from Player import Player
 from Trick import Trick
 from PlayerTypes import PlayerTypes
+import Hand
 import State
 
 '''
@@ -22,6 +23,7 @@ noSuit = 0
 spades = 2
 hearts = 3
 
+#Players must be unique
 allRandom = [Player("Random 1", PlayerTypes.Random), Player("Random 2", PlayerTypes.Random), 
 						 Player("Random 3", PlayerTypes.Random), Player("Random 4", PlayerTypes.Random)]
 allHuman = [Player("Human 1", PlayerTypes.Human), Player("Human 2", PlayerTypes.Human), 
@@ -33,6 +35,8 @@ oneNaiveMin_allRandom = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI), Player("R
 
 oneNaiveMin_oneHuman = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI), Player("Human 2", PlayerTypes.Human), 
 					  				  Player("Random 3", PlayerTypes.Random), Player("Random 4", PlayerTypes.Random)]
+
+thePlayers = oneNaiveMin_allRandom
 
 #Only necessary state is the current trick and all previously played tricks.
 class Hearts:
@@ -53,7 +57,7 @@ class Hearts:
 
 		# Make four players
 
-		self.players = oneNaiveMin_allRandom
+		self.players = thePlayers
 
 		'''
 		Player physical locations:
@@ -290,7 +294,7 @@ class Hearts:
 				minScore = p.score
 		return winner
 
-	#Plays a game and returns index of player who won.
+	#Plays a game and returns winning player
 	def playGame(self):
 		hearts = self
 		# play until someone loses
@@ -315,15 +319,37 @@ class Hearts:
 		print # spacing
 		print (hearts.getWinner().name, "wins!")
 
-		return self.players.index(hearts.getWinner())
+		winner = hearts.getWinner()
+
+		#Game over: Reset all player fields
+		for p in self.players:
+			p.score = 0
+			p.roundScore = 0
+			p.hand = Hand.Hand()
+			p.tricksWon = []
+
+		return winner
 
 def main():
-	hearts = Hearts()
-	State.state = hearts
 
-	hearts.playGame()
+	while True:
+		try: 
+			numGames = int(raw_input("How many games to play?\n"),10)
+			break
+		except ValueError:
+			print("Not a valid number. Try again.")
 
+	# Play numGames and store the number of times each player has won
+	# Player names must be unique
+	numWins = {thePlayers[0].name:0, thePlayers[1].name:0, thePlayers[2].name:0, thePlayers[3].name:0}
 
+	for i in range(0,numGames):
+		hearts = Hearts()
+		State.state = hearts
+		winningPlayer = hearts.playGame()
+		numWins[winningPlayer.name] += 1
+
+	print(numWins)
 
 if __name__ == '__main__':
 	main()
