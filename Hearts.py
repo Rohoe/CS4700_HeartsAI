@@ -290,34 +290,38 @@ class Hearts:
 				minScore = p.score
 		return winner
 
+	#Plays a game and returns index of player who won.
+	def playGame(self):
+		hearts = self
+		# play until someone loses
+		while hearts.losingPlayer is None or hearts.losingPlayer.score < maxScore:
+			while hearts.trickNum < totalTricks:
+				print ("Round", hearts.roundNum)
+				if hearts.trickNum == 0:
+					# if not auto:
+					# 	hearts.playersPassCards()
+					hearts.getFirstTrickStarter()
+				print ('\nPlaying trick number', hearts.trickNum + 1)
+				hearts.playTrick(hearts.trickWinner)
 
+			# tally scores
+			hearts.handleScoring()
 
+			# new round if no one has lost
+			if hearts.losingPlayer.score < maxScore:
+				print ("New round")
+				hearts.newRound()
+
+		print # spacing
+		print (hearts.getWinner().name, "wins!")
+
+		return self.players.index(hearts.getWinner())
 
 def main():
 	hearts = Hearts()
 	State.state = hearts
 
-	# play until someone loses
-	while hearts.losingPlayer is None or hearts.losingPlayer.score < maxScore:
-		while hearts.trickNum < totalTricks:
-			print ("Round", hearts.roundNum)
-			if hearts.trickNum == 0:
-				# if not auto:
-				# 	hearts.playersPassCards()
-				hearts.getFirstTrickStarter()
-			print ('\nPlaying trick number', hearts.trickNum + 1)
-			hearts.playTrick(hearts.trickWinner)
-
-		# tally scores
-		hearts.handleScoring()
-
-		# new round if no one has lost
-		if hearts.losingPlayer.score < maxScore:
-			print ("New round")
-			hearts.newRound()
-
-	print # spacing
-	print (hearts.getWinner().name, "wins!")
+	hearts.playGame()
 
 
 
