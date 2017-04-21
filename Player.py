@@ -1,7 +1,16 @@
+from __future__ import print_function
+from random import randint
 from Hand import Hand
 from PlayerTypes import PlayerTypes
 import State
 import Card
+import sys
+
+queen = 12
+clubs = 0
+diamonds = 1
+spades = 2
+hearts = 3
 
 class Player:
 	def __init__(self, name, player_type):
@@ -39,7 +48,72 @@ class Player:
 	def randomPlay(self):
 		return self.hand.getRandomCard()
 
+	def print_hand(self, validHand):
+		for suit in range(0,4):
+			print("Suit ", suit, ":"),
+			for card in validHand[suit]:
+				print(str(card), " "),
+			print
+
+	#Always tries to avoid taking the trick
 	def naiveMinAIPlay(self):
+		#get list of valid cards
+		gameState = State.state
+		validClubs = []
+		validDiamonds = []
+		validSpades = []
+		validHearts = []
+
+		validHand = [validClubs, validDiamonds, validSpades, validHearts]
+		for suit in range(0,4):
+			handSuit = self.hand.hand[suit]
+			for card in handSuit:
+				if gameState.isValidCard(card,self):
+ 					validHand[suit].append(card)
+
+ 		self.print_hand(validHand)
+
+		#if first, play lowest card in a random suit
+		if gameState.currentTrick.isUnset():
+			# print("Going first!")
+			#include hearts if hearts not broken or only has hearts
+			if gameState.heartsBroken == True or self.hasOnlyHearts():
+			  suitRange = 3
+			else:
+				suitRange = 2
+			randomSuit = randint(0,suitRange)
+			#return lowest card
+			# print("Current trick suit is: ", gameState.currentTrick.suit.iden)
+			# print("Going first and playing lowest card")
+			return Hand.lowestCard(validHand[randomSuit])
+		#if not first:
+		else:
+			# print("Not going first!")
+			trickSuit = gameState.currentTrick.suit.iden
+			#if there are cards in the trick suit play lowest card in trick suit
+			if(len(validHand[trickSuit]) > 0):
+				print("Still cards in trick suit")
+				return Hand.lowestCard(validHand[trickSuit])
+			else:
+				print("No cards in trick suit")
+				#play card with highest point value
+				maxPoints = -sys.maxsize
+				maxCard = None
+				for suit in range(0,4):
+					for card in validHand[suit]:
+						cardPoints = 0
+						if card.suit == Card.Suit(hearts):
+							cardPoints = 1
+						if card.suit == Card.Suit(spades) and card.rank == Card.Rank(queen):
+							cardPoints = 13
+						if cardPoints > maxPoints:
+							maxPoints = cardPoints
+							maxCard = card
+				return maxCard
+
+		#should never get here
+		raise Exception("failed programming")
+
 		return None
 
 	def play(self, option='play', c=None, auto=False):
@@ -52,7 +126,7 @@ class Player:
 			card = self.humanPlay(option)
 		elif self.type == PlayerTypes.Random:
 			card = self.randomPlay()
-		elif self.type == Player.Types.NaiveMinAI:
+		elif self.type == PlayerTypes.NaiveMinAI:
 			card = self.naiveMinAIPlay()
 		return card
 

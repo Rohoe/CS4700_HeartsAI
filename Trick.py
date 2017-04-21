@@ -28,6 +28,9 @@ class Trick:
 	# 			count += 1
 	# 	return count
 
+	def isUnset(self):
+		return self.cardsInTrick == 0
+
 	def setTrickSuit(self, card):
 		self.suit = card.suit
 

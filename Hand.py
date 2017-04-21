@@ -1,4 +1,5 @@
 from random import randint
+import sys
 from Card import Card, Suit
 
 clubs = 0
@@ -133,13 +134,26 @@ class Hand:
 		# print "self.size():",self.size()
 		return len(self.hearts) == self.size()
 
-
-
 	def __str__(self):
 		handStr = ''
 		for suit in self.hand:
 			for card in suit:
 				handStr += card.__str__() + ' '
 		return handStr
+
+#-----------------NEW METHODS-----------------------
+
+	#takes in a array of cards and returns the one with the lowest rank
+	@staticmethod
+	def lowestCard(card_arr):
+		# if(len(card_arr)==0): print("card_arr empty!")
+		min_rank = sys.maxsize
+		min_card = None
+		for card in card_arr:
+			if card.rank.rank < min_rank:
+				min_card = card
+				min_rank = card.rank.rank
+		# if min_card is None: print("min card is none!")
+		return min_card
 
 
