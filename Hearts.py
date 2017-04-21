@@ -349,7 +349,22 @@ def main():
 		winningPlayer = hearts.playGame()
 		numWins[winningPlayer.name] += 1
 
-	print(numWins)
+	p0 = thePlayers[0].name
+	p0_wins = numWins[p0]
+	p1 = thePlayers[1].name
+	p1_wins = numWins[p1]
+	p2 = thePlayers[2].name
+	p2_wins = numWins[p2]
+	p3 = thePlayers[3].name
+	p3_wins = numWins[p3]
+	print("-----------------------")
+	print("Win Rates (Total Games:", numGames, ")")
+	print("-----------------------")
+	print(p0, ":" ,"%.00f%%"%(100 * float(p0_wins)/float(numGames))),
+	print(p1, ":" ,"%.00f%%"%(100 * float(p1_wins)/float(numGames))),
+	print(p2, ":" ,"%.00f%%"%(100 * float(p2_wins)/float(numGames))),
+	print(p3, ":" ,"%.00f%%"%(100 * float(p3_wins)/float(numGames)))
+
 
 if __name__ == '__main__':
 	main()
