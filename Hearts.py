@@ -1,4 +1,6 @@
 from __future__ import print_function
+from timeit import default_timer as timer
+
 from Deck import Deck
 from Card import Card, Suit, Rank
 from Player import Player
@@ -27,7 +29,13 @@ oneNaiveMin_allRandom = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI), Player("R
 					  				  Player("Random 3", PlayerTypes.Random), Player("Random 4", PlayerTypes.Random)]
 
 oneNaiveMin_oneHuman = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI), Player("Human 2", PlayerTypes.Human), 
+					  				    Player("Random 3", PlayerTypes.Random), Player("Random 4", PlayerTypes.Random)]
+
+oneNaiveMax_allRandom = [Player("NaiveMax 1", PlayerTypes.NaiveMaxAI), Player("Random 2", PlayerTypes.Random), 
 					  				  Player("Random 3", PlayerTypes.Random), Player("Random 4", PlayerTypes.Random)]
+
+oneNaiveMax_allNaiveMin = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI), Player("NaiveMin 2", PlayerTypes.NaiveMinAI), 
+					  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI), Player("NaiveMax 4", PlayerTypes.NaiveMaxAI)]
 
 thePlayers = oneNaiveMin_allRandom
 
@@ -322,7 +330,7 @@ class Hearts:
 				if printsOn:
 					print ("New round")
 				hearts.newRound()
-				
+
 		if printsOn:
 			print # spacing
 			print (hearts.getWinner().name, "wins!")
@@ -347,6 +355,9 @@ def main():
 		except ValueError:
 			print("Not a valid number. Try again.")
 
+	#Timing start
+	start = timer()
+
 	# Play numGames and store the number of times each player has won
 	# Player names must be unique
 	numWins = {thePlayers[0].name:0, thePlayers[1].name:0, thePlayers[2].name:0, thePlayers[3].name:0}
@@ -356,6 +367,9 @@ def main():
 		State.state = hearts
 		winningPlayer = hearts.playGame()
 		numWins[winningPlayer.name] += 1
+
+	#Timing end
+	end = timer()
 
 	p0 = thePlayers[0].name
 	p0_wins = numWins[p0]
@@ -368,10 +382,12 @@ def main():
 	print("-----------------------")
 	print("Win Rates (Total Games:", numGames, ")")
 	print("-----------------------")
-	print(p0, ":" ,"%.00f%%"%(100 * float(p0_wins)/float(numGames))),
-	print(p1, ":" ,"%.00f%%"%(100 * float(p1_wins)/float(numGames))),
-	print(p2, ":" ,"%.00f%%"%(100 * float(p2_wins)/float(numGames))),
-	print(p3, ":" ,"%.00f%%"%(100 * float(p3_wins)/float(numGames)))
+	print(p0, ":" ,"%.2f%%"%(100 * float(p0_wins)/float(numGames))),
+	print(p1, ":" ,"%.2f%%"%(100 * float(p1_wins)/float(numGames))),
+	print(p2, ":" ,"%.2f%%"%(100 * float(p2_wins)/float(numGames))),
+	print(p3, ":" ,"%.2f%%"%(100 * float(p3_wins)/float(numGames)))
+
+	print("Time elapsed:", (end-start))
 
 
 if __name__ == '__main__':

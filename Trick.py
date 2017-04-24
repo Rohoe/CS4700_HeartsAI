@@ -1,4 +1,5 @@
 from Card import Card, Suit
+import time
 from Variables import *
 
 hearts = 3 # the corresponding index to the suit hearts

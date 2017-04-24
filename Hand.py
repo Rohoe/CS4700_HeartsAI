@@ -167,5 +167,16 @@ class Hand:
 		index = randint(0, len(suit)-1)
 		return suit[index]
 
+	@staticmethod
+	def highestCard(card_arr):
+		# if(len(card_arr)==0): print("card_arr empty!")
+		max_rank = -sys.maxsize
+		max_card = None
+		for card in card_arr:
+			if card.rank.rank > max_rank:
+				max_card = card
+				max_rank = card.rank.rank
+		# if min_card is None: print("min card is none!")
+		return max_card
 
 
