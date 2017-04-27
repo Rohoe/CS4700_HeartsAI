@@ -8,7 +8,6 @@ from Trick import Trick
 from PlayerTypes import PlayerTypes
 from Variables import *
 import Hand
-import State
 
 '''
 Change auto to False if you would like to play the game manually.
@@ -18,30 +17,27 @@ game by "guess and check", randomly trying moves until it finds a
 valid one.
 '''
 
-#Players must be unique
-allRandom = [Player("Random 1", PlayerTypes.Random), Player("Random 2", PlayerTypes.Random), 
-						 Player("Random 3", PlayerTypes.Random), Player("Random 4", PlayerTypes.Random)]
-allHuman = [Player("Human 1", PlayerTypes.Human), Player("Human 2", PlayerTypes.Human), 
-					  Player("Human 3", PlayerTypes.Human), Player("Human 4", PlayerTypes.Human)]
-oneHuman = [Player("Human 1", PlayerTypes.Human), Player("Random 2", PlayerTypes.Random), 
-					  Player("Random 3", PlayerTypes.Random), Player("Random 4", PlayerTypes.Random)]
-oneNaiveMin_allRandom = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI), Player("Random 2", PlayerTypes.Random), 
-					  				  Player("Random 3", PlayerTypes.Random), Player("Random 4", PlayerTypes.Random)]
 
-oneNaiveMin_oneHuman = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI), Player("Human 2", PlayerTypes.Human), 
-					  				    Player("Random 3", PlayerTypes.Random), Player("Random 4", PlayerTypes.Random)]
-
-oneNaiveMax_allRandom = [Player("NaiveMax 1", PlayerTypes.NaiveMaxAI), Player("Random 2", PlayerTypes.Random), 
-					  				  Player("Random 3", PlayerTypes.Random), Player("Random 4", PlayerTypes.Random)]
-
-oneNaiveMax_allNaiveMin = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI), Player("NaiveMin 2", PlayerTypes.NaiveMinAI), 
-					  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI), Player("NaiveMax 4", PlayerTypes.NaiveMaxAI)]
-
-thePlayers = oneNaiveMin_allRandom
 
 #Only necessary state is the current trick and all previously played tricks.
 class Hearts:
 	def __init__(self):
+		#Players must be unique
+		allRandom = [Player("Random 1", PlayerTypes.Random, self), Player("Random 2", PlayerTypes.Random, self),
+								 Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		allHuman = [Player("Human 1", PlayerTypes.Human, self), Player("Human 2", PlayerTypes.Human, self),
+							  Player("Human 3", PlayerTypes.Human, self), Player("Human 4", PlayerTypes.Human, self)]
+		oneHuman = [Player("Human 1", PlayerTypes.Human, self), Player("Random 2", PlayerTypes.Random, self),
+							  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		oneNaiveMin_allRandom = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI, self), Player("Random 2", PlayerTypes.Random, self),
+							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		oneNaiveMin_oneHuman = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI, self), Player("Human 2", PlayerTypes.Human, self),
+							  				    Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		oneNaiveMax_allRandom = [Player("NaiveMax 1", PlayerTypes.NaiveMaxAI, self), Player("Random 2", PlayerTypes.Random, self),
+							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		oneNaiveMax_allNaiveMin = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI, self), Player("NaiveMin 2", PlayerTypes.NaiveMinAI, self),
+							  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI, self), Player("NaiveMax 4", PlayerTypes.NaiveMaxAI, self)]
+		thePlayers = oneNaiveMin_allRandom
 
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
@@ -258,7 +254,7 @@ class Hearts:
 					#set to None if card is invalid based on rules
 					if self.isValidCard(addCard, curPlayer) == False:
 						addCard = None
-					else: 
+					else:
 						#change game state according to card
 
 						#hearts broken
@@ -349,7 +345,7 @@ class Hearts:
 def main():
 
 	while True:
-		try: 
+		try:
 			numGames = int(raw_input("How many games to play?\n"),10)
 			break
 		except ValueError:
@@ -360,11 +356,13 @@ def main():
 
 	# Play numGames and store the number of times each player has won
 	# Player names must be unique
-	numWins = {thePlayers[0].name:0, thePlayers[1].name:0, thePlayers[2].name:0, thePlayers[3].name:0}
-
+	numWins = None
+	thePlayers = None
 	for i in range(0,numGames):
 		hearts = Hearts()
-		State.state = hearts
+		if numWins is None:
+			thePlayers = hearts.players
+			numWins = {thePlayers[0].name:0, thePlayers[1].name:0, thePlayers[2].name:0, thePlayers[3].name:0}
 		winningPlayer = hearts.playGame()
 		numWins[winningPlayer.name] += 1
 

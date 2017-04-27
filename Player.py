@@ -2,19 +2,19 @@ from __future__ import print_function
 from random import randint
 from Hand import Hand
 from PlayerTypes import PlayerTypes
-import State
 import Card
 import sys
 from Variables import *
 
 class Player:
-	def __init__(self, name, player_type):
+	def __init__(self, name, player_type, game):
 			self.name = name
 			self.hand = Hand()
 			self.score = 0
 			self.roundscore = 0
 			self.tricksWon = []
 			self.type = player_type
+			self.gameState = game
 
 	def addCard(self, card):
 		self.hand.addCard(card)
@@ -42,7 +42,7 @@ class Player:
 
 	def randomPlay(self):
 		#get list of valid cards
-		gameState = State.state
+		gameState = self.gameState
 		validClubs = []
 		validDiamonds = []
 		validSpades = []
@@ -65,7 +65,7 @@ class Player:
 			print
 
 	def naiveMaxAIPlay(self):
-		gameState = State.state
+		gameState = self.gameState
 		validClubs = []
 		validDiamonds = []
 		validSpades = []
@@ -76,7 +76,7 @@ class Player:
 			handSuit = self.hand.hand[suit]
 			for card in handSuit:
 				if gameState.isValidCard(card,self):
- 					validHand[suit].append(card)		
+ 					validHand[suit].append(card)
 
 		#if first, play highest card in a random suit
 		if gameState.currentTrick.isUnset():
@@ -125,7 +125,7 @@ class Player:
 	#Always tries to avoid taking the trick
 	def naiveMinAIPlay(self):
 		#get list of valid cards
-		gameState = State.state
+		gameState = self.gameState
 		validClubs = []
 		validDiamonds = []
 		validSpades = []
