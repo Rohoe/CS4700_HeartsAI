@@ -7,7 +7,17 @@ import sys
 from Variables import *
 
 class Player:
-	def __init__(self, name, player_type, game):
+	def __init__(self, name, player_type, game, player=None):
+		if player is not None:
+			self.name = player.name
+			self.hand = player.hand
+			self.score = player.score
+			self.roundscore = player.roundscore
+			self.tricksWon = player.tricksWon
+			self.type = player.type
+			self.gameState = player.gameState
+			# potentially check if changes in copied player affect original
+		else:
 			self.name = name
 			self.hand = Hand()
 			self.score = 0
@@ -15,6 +25,7 @@ class Player:
 			self.tricksWon = []
 			self.type = player_type
 			self.gameState = game
+
 
 	def addCard(self, card):
 		self.hand.addCard(card)
