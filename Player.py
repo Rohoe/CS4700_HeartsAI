@@ -195,6 +195,9 @@ class Player:
 
 		return None
 
+	def monteCarloAIPlay(self):
+		
+
 	def play(self, option='play', c=None, auto=False):
 
 		card = None
@@ -209,6 +212,8 @@ class Player:
 			card = self.naiveMinAIPlay()
 		elif self.type == PlayerTypes.NaiveMaxAI:
 			card = self.naiveMaxAIPlay()
+		elif self.type == PlayerTypes.MonteCarloAI:
+			card = self.monteCarloAIPlay()
 		return card
 
 	def trickWon(self, trick):
