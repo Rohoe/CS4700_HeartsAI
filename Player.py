@@ -196,7 +196,9 @@ class Player:
 		return None
 
 	def monteCarloAIPlay(self):
-		
+		mcObj = MonteCarlo(self.gameState, self.name)
+		card = mcObj.getPlay()
+		return card
 
 	def play(self, option='play', c=None, auto=False):
 
@@ -231,3 +233,29 @@ class Player:
 
 	def hasOnlyHearts(self):
 		return self.hand.hasOnlyHearts()
+
+	def validPlays(self, trickSuit, heartsBroken, trickNum):
+		if self.hasOnlyHearts():
+			return self.hand.hearts
+
+		if heartsBroken:
+			if trickSuit==-1:
+				return self.hand.clubs + self.hand.diamonds + self.hand.spades + self.hand.hearts
+			else:
+				if len(self.hand.hand[trickSuit])==0:
+					return self.hand.clubs + self.hand.diamonds + self.hand.spades + self.hand.hearts
+				else:
+					return self.hand.hand[trickSuit]
+		else:
+			if trickSuit==-1:
+				allCards = self.hand.clubs + self.hand.diamonds + self.hand.spades + self.hand.hearts
+			else:
+				if len(self.hand.hand[trickSuit])==0:
+					if trickNum == 0:
+						cards = self.hand.clubs + self.hand.diamonds + self.hand.spades
+						cards.remove(Card(12,2))
+						return cards
+					else:
+						return self.hand.clubs + self.hand.diamonds + self.hand.spades + self.hand.hearts
+				else:
+					return self.hand.hand[trickSuit]
