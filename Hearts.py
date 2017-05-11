@@ -346,6 +346,12 @@ class Hearts:
 
 		return winner
 
+	def step(self, card, player):
+		player.removeCard(card)
+		self.currentTrick.addCard(card, start)
+
+		shift = 1 # alert game that first player has already played
+
 	def simulateRound(self):
 
 		# play until someone loses

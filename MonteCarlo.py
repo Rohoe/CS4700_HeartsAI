@@ -5,6 +5,12 @@ class MonteCarlo:
     def __init__(self, gameState, name):
         self.state = Hearts(gameState)
         self.ai = name
+
+        self.aiplayer = None
+        for p in self.state.players:
+            if p.name == name:
+                self.aiplayer = p
+
         self.redistribute()
         self.stats = {}
 

@@ -42,7 +42,7 @@ class Trick:
 			self.setTrickSuit(card)
 			if printsOn:
 				print 'Current trick suit:', self.suit
-		
+
 		self.trick[index] = card
 		self.cardsInTrick += 1
 
@@ -57,3 +57,17 @@ class Trick:
 				self.winner = index
 				if printsOn:
 					print "Highest:",self.highest
+
+	def getCurrentPlayer(self,trickWinner):
+		trick = self.trick
+		ind = trickWinner
+		if trick[ind] == 0:
+			return ind
+		count = 0
+		while trick[ind] != 0 and count < 4:
+			ind = (ind + 1) % 4
+			count += 1
+		if count = 4:
+			return -1
+		else: 
+			return ind
