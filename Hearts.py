@@ -439,6 +439,10 @@ class Hearts:
 
 		return winner
 
+	#returns the current player
+	def getCurrentPlayer(self):
+		return self.currentTrick.getCurrentPlayer()
+
 
 def main():
 
