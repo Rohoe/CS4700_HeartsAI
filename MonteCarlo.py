@@ -36,7 +36,6 @@ class MonteCarlo:
                     hand.addCard(cardAdd)
                 player.hand = hand
 
-
     def update(self):
 
 

@@ -196,7 +196,7 @@ class Hearts:
 				# if player only has hearts but hearts have not been broken,
 				# player can play hearts
 				if not player.hasOnlyHearts():
-					if printsOn:
+					if printsOn and player.type == PlayerTypes.Human:
 						print ("Hearts have not been broken.")
 					return False
 
@@ -205,18 +205,18 @@ class Hearts:
 		# print (card)
 		if self.currentTrick.suit != Suit(-1) and card.suit != self.currentTrick.suit:
 			 if player.hasSuit(self.currentTrick.suit):
-					if printsOn:
+					if printsOn and player.type == PlayerTypes.Human:
 						print ("Must play the suit of the current trick.")
 					return False
 
 		#Can't play hearts or queen of spades on first hand
 		if self.trickNum == 0:
 			if card.suit == Suit(hearts):
-				if printsOn:
+				if printsOn and player.type == PlayerTypes.Human:
 					print ("Hearts cannot be broken on the first hand.")
 				return False
 			elif card.suit == Suit(spades) and card.rank == Rank(queen):
-				if printsOn:
+				if printsOn and player.type == PlayerTypes.Human:
 					print ("The queen of spades cannot be played on the first hand.")
 				return False
 
@@ -373,6 +373,10 @@ class Hearts:
 		# have each player take their turn
 		for i in range(start + self.shift, start + len(self.players)):
 			self.printCurrentTrick()
+
+			if printsOn:
+				print ("Current player: %s" % self.getCurrentPlayer(self.trickWinner))
+
 			curPlayerIndex = i % len(self.players)
 			self.printPlayer(curPlayerIndex)
 			curPlayer = self.players[curPlayerIndex]
@@ -394,6 +398,8 @@ class Hearts:
 							self.heartsBroken = True
 						if addCard.suit == Suit(spades) and addCard.rank == Rank(queen):
 							self.heartsBroken = True
+			
+
 
 			self.step(addCard,curPlayer)
 			if printsOn:
@@ -443,8 +449,8 @@ class Hearts:
 		return winner
 
 	#returns the current player
-	def getCurrentPlayer(self):
-		return self.currentTrick.getCurrentPlayer()
+	def getCurrentPlayer(self, trickWinner):
+		return self.players[self.currentTrick.getCurrentPlayer(trickWinner)]
 
 
 def main():

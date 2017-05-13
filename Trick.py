@@ -59,12 +59,15 @@ class Trick:
 					print "Highest:",self.highest
 
 	def getCurrentPlayer(self,trickWinner):
+		if printsOn:
+			print ("Getting current player, trick winner is %s" % trickWinner)
+
 		trick = self.trick
 		ind = trickWinner
-		if trick[ind] == 0:
+		if trick[ind] is 0:
 			return ind
 		count = 0
-		while trick[ind] != 0 and count < 4:
+		while trick[ind] is not 0 and count < 4:
 			ind = (ind + 1) % 4
 			count += 1
 		if count == 4:

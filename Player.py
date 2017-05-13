@@ -26,6 +26,8 @@ class Player:
 			self.type = player_type
 			self.gameState = game
 
+	def __str__(self):
+		return self.name
 
 	def addCard(self, card):
 		self.hand.addCard(card)
