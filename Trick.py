@@ -67,7 +67,7 @@ class Trick:
 		while trick[ind] != 0 and count < 4:
 			ind = (ind + 1) % 4
 			count += 1
-		if count = 4:
+		if count == 4:
 			return -1
-		else: 
+		else:
 			return ind

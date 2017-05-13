@@ -51,6 +51,7 @@ class Hearts:
 			self.trickWinner = -1
 			self.heartsBroken = False
 			self.losingPlayer = None
+			self.shift = 0
 			#self.passingCards = [[], [], [], []]
 
 
@@ -346,14 +347,50 @@ class Hearts:
 
 		return winner
 
-	def step(self, card, player):
+	def step(self, card, player, start):
 		player.removeCard(card)
 		self.currentTrick.addCard(card, start)
+		self.shift += 1
+		if self.shift == 4:
+			self.evaluateTrick()
+			self.trickNum += 1
+			self.shift = 0
 
-		shift = 1 # alert game that first player has already played
+	def playTrickStepping(self, start):
+		if self.trickNum == 0:
+			startPlayer = self.players[start]
+			addCard = startPlayer.play(option="play", c='2c')
+			self.step(addCard, startPlayer,start)
 
-	def simulateRound(self):
+		# have each player take their turn
+		for i in range(start + self.shift, start + len(self.players)):
+			self.printCurrentTrick()
+			curPlayerIndex = i % len(self.players)
+			self.printPlayer(curPlayerIndex)
+			curPlayer = self.players[curPlayerIndex]
+			addCard = None
 
+			while addCard is None: # wait until a valid card is passed
+				addCard = curPlayer.play(auto=auto) # change auto to False to play manually
+				# print(curPlayer.name, "playing: "),
+				# print(addCard)
+				# the rules for what cards can be played
+				# card set to None if it is found to be invalid
+				if addCard is not None:
+					#set to None if card is invalid based on rules
+					if self.isValidCard(addCard, curPlayer) == False:
+						addCard = None
+					else: #change game state according to card
+						#hearts broken
+						if addCard.suit == Suit(hearts):
+							self.heartsBroken = True
+						if addCard.suit == Suit(spades) and addCard.rank == Rank(queen):
+							self.heartsBroken = True
+
+			self.step(addCard,curPlayer,curPlayerIndex)
+
+	def playGameStepping(self):
+		hearts = self
 		# play until someone loses
 		while hearts.losingPlayer is None or hearts.losingPlayer.score < maxScore:
 			while hearts.trickNum < totalTricks:
@@ -365,7 +402,7 @@ class Hearts:
 					hearts.getFirstTrickStarter()
 				if printsOn:
 					print ('\nPlaying trick number', hearts.trickNum + 1)
-				hearts.playTrick(hearts.trickWinner)
+				hearts.playTrickStepping(hearts.trickWinner)
 
 			# tally scores
 			hearts.handleScoring()
@@ -375,6 +412,21 @@ class Hearts:
 				if printsOn:
 					print ("New round")
 				hearts.newRound()
+
+		if printsOn:
+			print # spacing
+			print (hearts.getWinner().name, "wins!")
+
+		winner = hearts.getWinner()
+
+		#Game over: Reset all player fields
+		for p in self.players:
+			p.score = 0
+			p.roundScore = 0
+			p.hand = Hand.Hand()
+			p.tricksWon = []
+
+		return winner
 
 
 def main():
@@ -398,7 +450,7 @@ def main():
 		if numWins is None:
 			thePlayers = hearts.players
 			numWins = {thePlayers[0].name:0, thePlayers[1].name:0, thePlayers[2].name:0, thePlayers[3].name:0}
-		winningPlayer = hearts.playGame()
+		winningPlayer = hearts.playGameStepping()
 		numWins[winningPlayer.name] += 1
 
 	#Timing end
