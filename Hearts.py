@@ -52,6 +52,9 @@ class Hearts:
 			self.heartsBroken = False
 			self.losingPlayer = None
 			self.shift = 0
+
+			self.cardsPlayed = [] #keep track of state.
+
 			#self.passingCards = [[], [], [], []]
 
 
@@ -408,11 +411,13 @@ class Hearts:
 			# tally scores
 			hearts.handleScoring()
 
-			# new round if no one has lost
-			if hearts.losingPlayer.score < maxScore:
-				if printsOn:
-					print ("New round")
-				hearts.newRound()
+			#End game if out of cards and max score has not been reached
+
+			# # new round if no one has lost
+			# if hearts.losingPlayer.score < maxScore:
+			# 	if printsOn:
+			# 		print ("New round")
+			# 	hearts.newRound()
 
 		if printsOn:
 			print # spacing
