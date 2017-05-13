@@ -347,8 +347,9 @@ class Hearts:
 
 		return winner
 
-	def step(self, card, player, start):
+	def step(self, card, player):
 		player.removeCard(card)
+		start = (self.trickWinner + self.shift) % len(self.players)
 		self.currentTrick.addCard(card, start)
 		self.shift += 1
 		if self.shift == 4:
@@ -360,7 +361,7 @@ class Hearts:
 		if self.trickNum == 0:
 			startPlayer = self.players[start]
 			addCard = startPlayer.play(option="play", c='2c')
-			self.step(addCard, startPlayer,start)
+			self.step(addCard, startPlayer)
 
 		# have each player take their turn
 		for i in range(start + self.shift, start + len(self.players)):
@@ -387,7 +388,7 @@ class Hearts:
 						if addCard.suit == Suit(spades) and addCard.rank == Rank(queen):
 							self.heartsBroken = True
 
-			self.step(addCard,curPlayer,curPlayerIndex)
+			self.step(addCard,curPlayer)
 
 	def playGameStepping(self):
 		hearts = self
