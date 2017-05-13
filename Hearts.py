@@ -8,7 +8,6 @@ from Trick import Trick
 from PlayerTypes import PlayerTypes
 from Variables import *
 import Hand
-import copy
 
 '''
 Change auto to False if you would like to play the game manually.
@@ -23,59 +22,63 @@ valid one.
 #Only necessary state is the current trick and all previously played tricks.
 class Hearts:
 	def __init__(self, orig=None):
-		if orig is None:
-			#Players must be unique
-			allRandom = [Player("Random 1", PlayerTypes.Random, self), Player("Random 2", PlayerTypes.Random, self),
-									 Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
-			allHuman = [Player("Human 1", PlayerTypes.Human, self), Player("Human 2", PlayerTypes.Human, self),
-								  Player("Human 3", PlayerTypes.Human, self), Player("Human 4", PlayerTypes.Human, self)]
-			oneHuman = [Player("Human 1", PlayerTypes.Human, self), Player("Random 2", PlayerTypes.Random, self),
-								  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
-			oneNaiveMin_allRandom = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI, self), Player("Random 2", PlayerTypes.Random, self),
-								  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
-			oneNaiveMin_oneHuman = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI, self), Player("Human 2", PlayerTypes.Human, self),
-								  				    Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
-			oneNaiveMax_allRandom = [Player("NaiveMax 1", PlayerTypes.NaiveMaxAI, self), Player("Random 2", PlayerTypes.Random, self),
-								  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
-			oneNaiveMax_allNaiveMin = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI, self), Player("NaiveMin 2", PlayerTypes.NaiveMinAI, self),
-								  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI, self), Player("NaiveMax 4", PlayerTypes.NaiveMaxAI, self)]
-			thePlayers = oneHuman
+		# if orig is None:
+		#Players must be unique
+		allRandom = [Player("Random 1", PlayerTypes.Random, self), Player("Random 2", PlayerTypes.Random, self),
+								 Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		allHuman = [Player("Human 1", PlayerTypes.Human, self), Player("Human 2", PlayerTypes.Human, self),
+							  Player("Human 3", PlayerTypes.Human, self), Player("Human 4", PlayerTypes.Human, self)]
+		oneHuman = [Player("Human 1", PlayerTypes.Human, self), Player("Random 2", PlayerTypes.Random, self),
+							  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		oneNaiveMin_allRandom = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI, self), Player("Random 2", PlayerTypes.Random, self),
+							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		oneNaiveMin_oneHuman = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI, self), Player("Human 2", PlayerTypes.Human, self),
+							  				    Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		oneNaiveMax_allRandom = [Player("NaiveMax 1", PlayerTypes.NaiveMaxAI, self), Player("Random 2", PlayerTypes.Random, self),
+							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		oneNaiveMax_allNaiveMin = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI, self), Player("NaiveMin 2", PlayerTypes.NaiveMinAI, self),
+							  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI, self), Player("NaiveMax 4", PlayerTypes.NaiveMaxAI, self)]
+		oneMonte_allRandom = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Random 2", PlayerTypes.Random, self),
+							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		oneMonte_allHuman = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
+							  Player("Human 3", PlayerTypes.Human, self), Player("Human 4", PlayerTypes.Human, self)]
+		
+		thePlayers = oneMonte_allHuman
+		self.roundNum = 0
+		self.trickNum = 0 # initialization value such that first round is round 0
+		self.dealer = -1 # so that first dealer is 0
+		#self.passes = [1, -1, 2, 0] # left, right, across, no pass
+		self.allTricks = []
+		self.currentTrick = Trick()
+		self.allTricks < self.currentTrick
+		self.trickWinner = -1
+		self.heartsBroken = False
+		self.losingPlayer = None
+		self.shift = 0
 
-			self.roundNum = 0
-			self.trickNum = 0 # initialization value such that first round is round 0
-			self.dealer = -1 # so that first dealer is 0
-			#self.passes = [1, -1, 2, 0] # left, right, across, no pass
-			self.allTricks = []
-			self.currentTrick = Trick()
-			self.allTricks < self.currentTrick
-			self.trickWinner = -1
-			self.heartsBroken = False
-			self.losingPlayer = None
-			self.shift = 0
+		self.cardsPlayed = () #keep track of state in a tuple
 
-			self.cardsPlayed = () #keep track of state in a tuple
-
-			#self.passingCards = [[], [], [], []]
+		#self.passingCards = [[], [], [], []]
 
 
-			# Make four players
+		# Make four players
 
-			self.players = thePlayers
+		self.players = thePlayers
 
-			'''
-			Player physical locations:
-			Game runs clockwise
+		'''
+		Player physical locations:
+		Game runs clockwise
 
-				p3
-			p2		p4
-				p1
+			p3
+		p2		p4
+			p1
 
-			'''
+		'''
 
-			# Generate a full deck of cards and shuffle it
-			self.newRound()
-		else:
-			self = copy.deepcopy(orig)
+		# Generate a full deck of cards and shuffle it
+		self.newRound()
+		# else:
+		# 	self = copy.deepcopy(orig)
 
 	def handleScoring(self):
 		p, highestScore = None, 0
@@ -451,6 +454,9 @@ class Hearts:
 	#returns the current player
 	def getCurrentPlayer(self, trickWinner):
 		return self.players[self.currentTrick.getCurrentPlayer(trickWinner)]
+
+	def getDeepCopy(self):
+		return Hearts(self)
 
 
 def main():

@@ -2,6 +2,7 @@ from __future__ import print_function
 from random import randint
 from Hand import Hand
 from PlayerTypes import PlayerTypes
+from MonteCarlo import MonteCarlo
 import Card
 import sys
 from Variables import *
