@@ -39,7 +39,7 @@ class Hearts:
 								  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
 			oneNaiveMax_allNaiveMin = [Player("NaiveMin 1", PlayerTypes.NaiveMinAI, self), Player("NaiveMin 2", PlayerTypes.NaiveMinAI, self),
 								  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI, self), Player("NaiveMax 4", PlayerTypes.NaiveMaxAI, self)]
-			thePlayers = oneNaiveMin_allRandom
+			thePlayers = oneHuman
 
 			self.roundNum = 0
 			self.trickNum = 0 # initialization value such that first round is round 0
@@ -112,6 +112,7 @@ class Hearts:
 		self.currentTrick = Trick()
 		self.allTricks = []
 		#self.passingCards = [[], [], [], []]
+		self.cardsPlayed = ()
 		for p in self.players:
 			p.discardTricks()
 
@@ -395,6 +396,8 @@ class Hearts:
 							self.heartsBroken = True
 
 			self.step(addCard,curPlayer)
+			if printsOn:
+				print ("Cards played: %s" % (self.cardsPlayed,))
 
 	def playGameStepping(self):
 		hearts = self

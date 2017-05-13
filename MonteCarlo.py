@@ -44,8 +44,4 @@ class MonteCarlo:
 
 
     def runSimulation(self):
-
-
-
-
         self.state.simulate()
