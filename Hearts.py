@@ -412,6 +412,9 @@ class Hearts:
 			hearts.handleScoring()
 
 			#End game if out of cards and max score has not been reached
+			winner = hearts.getWinner()
+			return winner
+
 
 			# # new round if no one has lost
 			# if hearts.losingPlayer.score < maxScore:
