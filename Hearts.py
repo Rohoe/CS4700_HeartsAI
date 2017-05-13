@@ -53,7 +53,7 @@ class Hearts:
 			self.losingPlayer = None
 			self.shift = 0
 
-			self.cardsPlayed = [] #keep track of state.
+			self.cardsPlayed = () #keep track of state in a tuple
 
 			#self.passingCards = [[], [], [], []]
 
@@ -351,6 +351,9 @@ class Hearts:
 		return winner
 
 	def step(self, card, player):
+		#add card to state
+		self.cardsPlayed = self.cardsPlayed + (card,)
+
 		player.removeCard(card)
 		start = (self.trickWinner + self.shift) % len(self.players)
 		self.currentTrick.addCard(card, start)
@@ -414,7 +417,6 @@ class Hearts:
 			#End game if out of cards and max score has not been reached
 			winner = hearts.getWinner()
 			return winner
-
 
 			# # new round if no one has lost
 			# if hearts.losingPlayer.score < maxScore:
