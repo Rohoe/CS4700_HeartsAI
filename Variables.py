@@ -8,5 +8,5 @@ diamonds = 1
 spades = 2
 hearts = 3
 
-printsOn = True
-printsOnMonte = False
+printsOn = False
+printsOnMonte = True

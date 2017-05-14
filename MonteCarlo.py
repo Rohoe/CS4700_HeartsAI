@@ -1,4 +1,5 @@
 from __future__ import division
+from math import log, sqrt
 from random import randint
 from random import choice
 from Hand import Hand
@@ -23,6 +24,7 @@ class MonteCarlo:
 
         self.wins = {}
         self.plays = {}
+        self.C = kwargs.get('C', 1.4)
 
     def redistribute(self, board):
         #gets all cards from players
@@ -62,6 +64,7 @@ class MonteCarlo:
 
     def getPlay(self):
         #suppress prints
+        restorePrints = False
         if Variables.printsOn == True:
             Variables.printsOn = False
             restorePrints = True
@@ -80,8 +83,6 @@ class MonteCarlo:
         games = 0
         begin = datetime.datetime.utcnow()
         while datetime.datetime.utcnow() - begin < self.calculation_time:
-            if printsOnMonte:
-                print("Simulation #%s" % games)
             self.runSimulation()
             games += 1
             # raw_input("Enter to continue")
@@ -125,6 +126,9 @@ class MonteCarlo:
         return move
 
     def runSimulation(self):
+
+        plays, wins = self.plays, self.wins
+
         visited_states = set()
         states_copy = self.states[:]
         state = states_copy[-1]
@@ -135,8 +139,27 @@ class MonteCarlo:
         for t in xrange(self.max_moves):
             player = board.getCurrentPlayer()
             legal = board.getLegalPlays(player)
-            card = choice(legal)
-            board.step(card, player, True)
+
+            moves_states = []
+            for p in legal:
+                legalState = board.cardsPlayed + (p,)
+                moves_states.append((p, legalState))
+
+            #if stats available on all legal moves, use them
+            if all(plays.get((player, S)) for p, S in moves_states):
+                # If we have stats on all of the legal moves here, use them.
+                log_total = log(
+                    sum(plays[(player, S)] for p, S in moves_states))
+                value, move, state = max(
+                    ((wins[(player, S)] / plays[(player, S)]) +
+                     self.C * sqrt(log_total / plays[(player, S)]), p, S)
+                    for p, S in moves_states
+                )
+            else: 
+                #make arbitrary decision
+                move, state = choice(moves_states)
+
+            board.step(move, player)
             state = board.cardsPlayed
             states_copy.append(state)
 
@@ -144,15 +167,14 @@ class MonteCarlo:
                 expand = False
                 self.plays[(player, state)] = 0
                 self.wins[(player, state)] = 0
+                if (t > self.max_depth):
+                    self.max_depth = t
 
             visited_states.add((player,state))
 
             winner = board.winningPlayer
             if winner:
                 break
-
-        if printsOnMonte:
-            print ("Winner of simulation: %s" % winner.name)
 
         for player, state in visited_states:
             if (player, state) not in self.plays:
