@@ -22,6 +22,9 @@ class Hand:
 
 		self.contains2ofclubs = False
 
+	def __str__(self):
+		return (self.clubs + self.diamonds + self.spades + self.hearts).__str__()
+
 	def size(self):
 		return len(self.clubs) + len(self.diamonds) + len(self.spades) + len(self.hearts)
 

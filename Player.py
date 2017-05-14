@@ -200,6 +200,7 @@ class Player:
 
 	def monteCarloAIPlay(self):
 		mcObj = MonteCarlo(self.gameState, self.name)
+		mcObj.update(self.gameState.cardsPlayed)
 		card = mcObj.getPlay()
 		return card
 
