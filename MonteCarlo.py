@@ -1,9 +1,11 @@
+from __future__ import division
 from random import randint
 from random import choice
 from Hand import Hand
 import datetime
 import copy
 from Variables import *
+import Variables
 
 class MonteCarlo:
     def __init__(self, gameState, name, **kwargs):
@@ -17,6 +19,7 @@ class MonteCarlo:
         seconds = kwargs.get('time', 5)
         self.calculation_time = datetime.timedelta(seconds=seconds)
         self.max_moves = kwargs.get('max_moves',100)
+        self.max_depth = 0
 
         self.wins = {}
         self.plays = {}
@@ -58,18 +61,68 @@ class MonteCarlo:
         self.states.append(state)
 
     def getPlay(self):
+        #suppress prints
+        if Variables.printsOn == True:
+            Variables.printsOn = False
+            restorePrints = True
+
+        self.max_depth = 0
+        state = self.states[-1]
+        player = self.gameState.getCurrentPlayer()
+        legal = self.gameState.getLegalPlays(player)
+
+        #return early if no choice to be made
+        if len(legal) == 0:
+            return -1
+        if len(legal) == 1:
+            return legal[0]
+
+        games = 0
         begin = datetime.datetime.utcnow()
-        iterations = 0
         while datetime.datetime.utcnow() - begin < self.calculation_time:
             if printsOnMonte:
-                print("Iteration %s" % iterations)
+                print("Simulation #%s" % games)
             self.runSimulation()
-            iterations += 1
+            games += 1
             # raw_input("Enter to continue")
 
+        # Display the number of calls of `run_simulation` and the
+        # time elapsed.
+        if printsOnMonte:
+            print games, datetime.datetime.utcnow() - begin
 
+        moves_states = []
+        for p in legal:
+            legalState = self.gameState.cardsPlayed + (p,)
+            moves_states.append((p, legalState))
 
-        return 
+        #Pick the move with the highest percentage of wins.
+        percent_wins, move = max(
+            (self.wins.get((player, S), 0) /
+             self.plays.get((player, S), 1),
+             p)
+            for p, S in moves_states
+        )
+
+        if printsOnMonte: 
+            # Display the stats for each possible play.
+            for x in sorted(
+                ((100 * self.wins.get((player, S), 0) /
+                  self.plays.get((player, S), 1),
+                  self.wins.get((player, S), 0),
+                  self.plays.get((player, S), 0), p)
+                 for p, S in moves_states),
+                reverse=True
+            ):
+                print "{3}: {0:.2f}% ({1} / {2})".format(*x)
+        if printsOnMonte:
+            print "Maximum depth searched:", self.max_depth
+
+        #restore prints
+        if restorePrints:
+            Variables.printsOn = True
+
+        return move
 
     def runSimulation(self):
         visited_states = set()
@@ -83,7 +136,7 @@ class MonteCarlo:
             player = board.getCurrentPlayer()
             legal = board.getLegalPlays(player)
             card = choice(legal)
-            board.step(card, player)
+            board.step(card, player, True)
             state = board.cardsPlayed
             states_copy.append(state)
 
@@ -107,6 +160,4 @@ class MonteCarlo:
             self.plays[(player, state)] += 1
             if player == winner:
                 self.wins[(player,state)] += 1
-
-
         return
