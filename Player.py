@@ -5,6 +5,7 @@ from PlayerTypes import PlayerTypes
 from MonteCarlo import MonteCarlo
 import Card
 import sys
+import os
 from Variables import *
 
 class Player:
@@ -46,6 +47,11 @@ class Player:
 	def getInput(self, option):
 		card = None
 		while card is None:
+			os.system('clear')
+			#display game information
+			self.gameState.printGameState()
+			print()
+			print("Your hand: %s: " % self.hand)
 			card = raw_input(self.name + ", select a card to " + option + ": ")
 		return card
 

@@ -47,7 +47,11 @@ class Hearts:
 		oneMonte_allNaive = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("NaiveMin 2", PlayerTypes.NaiveMinAI, self),
 							  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI, self), Player("NaiveMin 4", PlayerTypes.NaiveMinAI, self)]
 
-		thePlayers = allRandom
+		oneMonte_oneRandom = 	oneMonte_allRandom = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
+							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+
+		thePlayers = oneMonte_oneRandom
+
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
 		self.dealer = -1 # so that first dealer is 0
@@ -84,6 +88,30 @@ class Hearts:
 		self.newRound()
 		# else:
 		# 	self = copy.deepcopy(orig)
+
+	def printGameState(self):
+		#Round number
+		print("Round: %s" % self.roundNum)
+
+		#Scores
+		print ("Scores:\n")
+		for player in self.players:
+			print (player.name + " round score: " + str(player.roundscore) + ", total score: " + str(player.score))
+
+		#Trick
+		print ('\nPlaying trick number', self.trickNum)
+
+		trickStr = '\nCurrent table:\n'
+		trickStr += "Trick suit: " + self.currentTrick.suit.__str__() + "\n"
+		for i, card in enumerate(self.currentTrick.trick):
+			if self.currentTrick.trick[i] is not 0:
+				trickStr += self.players[i].name + ": " + str(card) + "\n"
+			else:
+				trickStr += self.players[i].name + ": None\n"
+		print (trickStr)
+
+		#Cards played
+		print ("All cards played: %s" % (self.cardsPlayed,))
 
 	#return array of players with lowest score
 	def roundWinners(self):

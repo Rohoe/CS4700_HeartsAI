@@ -27,7 +27,7 @@ class MonteCarlo:
         self.C = kwargs.get('C', 1.4)
 
         #parameters
-        self.useRoundScoreOnly = False
+        self.useRoundScoreOnly = Variables.useRoundScoreOnly
 
     def redistribute(self, board):
         #gets all cards from players
