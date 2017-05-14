@@ -14,7 +14,7 @@ printsOnMonte = False
 
 numThreads = 2
 
-#time allowed for monteCarloAI
+#time allowed for monteCarloAI in seconds
 monteCarloTime = 4
 
 #If true, monteAI only cares about the current round scores
