@@ -159,7 +159,7 @@ class MonteCarlo:
                 #make arbitrary decision
                 move, state = choice(moves_states)
 
-            board.step(move, player)
+            board.step(move, player, True)
             state = board.cardsPlayed
             states_copy.append(state)
 
@@ -172,14 +172,14 @@ class MonteCarlo:
 
             visited_states.add((player,state))
 
-            winner = board.winningPlayer
-            if winner:
+            winners = board.winningPlayers
+            if winners:
                 break
 
         for player, state in visited_states:
             if (player, state) not in self.plays:
                 continue
             self.plays[(player, state)] += 1
-            if player == winner:
+            if player in winners:
                 self.wins[(player,state)] += 1
         return

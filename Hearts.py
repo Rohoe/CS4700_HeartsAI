@@ -44,7 +44,9 @@ class Hearts:
 							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
 		oneMonte_allHuman = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
 							  Player("Human 3", PlayerTypes.Human, self), Player("Human 4", PlayerTypes.Human, self)]
-		
+		oneMonte_allNaive = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("NaiveMin 2", PlayerTypes.NaiveMinAI, self),
+							  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI, self), Player("NaiveMin 4", PlayerTypes.NaiveMinAI, self)]
+
 		thePlayers = oneMonte_allRandom
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
@@ -57,6 +59,7 @@ class Hearts:
 		self.heartsBroken = False
 		self.losingPlayer = None
 		self.winningPlayer = None
+		self.winningPlayers = None
 		self.shift = 0
 
 		self.cardsPlayed = () #keep track of state in a tuple
@@ -82,6 +85,29 @@ class Hearts:
 		# else:
 		# 	self = copy.deepcopy(orig)
 
+	#return array of players with lowest score
+	def roundWinners(self):
+		winners = set()
+		for player in self.players:
+			if player.roundscore == 26:
+				shotMoon = True
+				winners.add(player)
+				return winners
+
+		minScore = 200 # impossibly high
+		winner = None
+		for p in self.players:
+			if p.roundscore < minScore:
+				winner = p
+				minScore = p.roundscore
+
+		winners.add(winner)
+		#check for a draw
+		for p in self.players:
+			if p != winner and p.roundscore == minScore:
+				winners.add(p)
+		return winners
+
 	def handleScoring(self, suppressPrints = False):
 		p, highestScore = None, 0
 		if not suppressPrints:
@@ -103,8 +129,6 @@ class Hearts:
 				p = player
 				highestScore = player.score
 			self.losingPlayer = p
-
-
 
 	def newRound(self):
 		self.deck = Deck()
@@ -368,7 +392,7 @@ class Hearts:
 
 		return winner
 
-	def step(self, card, player, suppressPrints = False):
+	def step(self, card, player, monteCarlo = False):
 		#add card to state
 		self.cardsPlayed = self.cardsPlayed + (card,)
 
@@ -377,19 +401,19 @@ class Hearts:
 		self.currentTrick.addCard(card, start)
 		self.shift += 1
 		if self.shift == 4:
-			self.evaluateTrick(suppressPrints)
+			self.evaluateTrick()
 			self.trickNum += 1
 			self.shift = 0
-			if not suppressPrints: 
-				if Variables.printsOn:
-					print ('\nPlaying trick number', self.trickNum)
-					self.printCurrentTrick()
-			#end game and evaluate winner
-			if (self.trickNum >= totalTricks):
-				self.handleScoring(suppressPrints)
-				self.winningPlayer = self.getWinner()
-				# if Variables.printsOnMonte:
-				# 	print ("Game over: Winner is %s" % self.winningPlayer)
+			if Variables.printsOn:
+				print ('\nPlaying trick number', self.trickNum)
+				self.printCurrentTrick()
+			#end game and evaluate winner if round is over
+			if monteCarlo: 
+				if (self.trickNum >= totalTricks):
+					self.winningPlayers = self.roundWinners()
+					# if Variables.printsOnMonte:
+					# 	print ("Game over: Winner is %s" % self.winningPlayer)
+					# 	print ("Score: %s" % self.winningPlayer.roundscore)
 
 	def playTrickStepping(self, start):
 		if self.trickNum == 0:
@@ -450,15 +474,15 @@ class Hearts:
 			# tally scores
 			hearts.handleScoring()
 
-			#End game if out of cards and max score has not been reached
-			winner = hearts.getWinner()
-			return winner
+			# #End game if out of cards and max score has not been reached
+			# winner = hearts.getWinner()
+			# return winner
 
-			# # new round if no one has lost
-			# if hearts.losingPlayer.score < maxScore:
-			# 	if Variables.printsOn:
-			# 		print ("New round")
-			# 	hearts.newRound()
+			# new round if no one has lost
+			if hearts.losingPlayer.score < maxScore:
+				if Variables.printsOn:
+					print ("New round")
+				hearts.newRound()
 
 		if Variables.printsOn:
 			print # spacing
@@ -513,25 +537,28 @@ def main():
 	# numWins = runGames(numGames)
 
 	#parallelize
-	numThreads = Variables.numThreads
-	gamesPerThread = int(floor(numGames / numThreads))
+	# numThreads = Variables.numThreads
+	# gamesPerThread = int(floor(numGames / numThreads))
 
-	#assign games per thread
-	threadGames = []
-	gamesAssigned = 0
-	for i in range(0,numThreads):
-		if (i != numThreads - 1):
-			threadGames.append(gamesPerThread)
-			gamesAssigned += gamesPerThread
-		else:
-			gamesLeft = numGames - gamesAssigned
-			threadGames.append(gamesLeft)
-			gamesAssigned += gamesLeft
+	# #assign games per thread
+	# threadGames = []
+	# gamesAssigned = 0
+	# for i in range(0,numThreads):
+	# 	if (i != numThreads - 1):
+	# 		threadGames.append(gamesPerThread)
+	# 		gamesAssigned += gamesPerThread
+	# 	else:
+	# 		gamesLeft = numGames - gamesAssigned
+	# 		threadGames.append(gamesLeft)
+	# 		gamesAssigned += gamesLeft
 
-	pool = ThreadPool(numThreads)
-	results = pool.map(runGames, threadGames)
-	pool.close()
-	pool.join()
+	# pool = ThreadPool(numThreads)
+	# results = pool.map(runGames, threadGames)
+	# pool.close()
+	# pool.join()
+
+	results = []
+	results.append(runGames(numGames))
 
 	#aggregate results
 	thePlayers = results[-1].keys()
