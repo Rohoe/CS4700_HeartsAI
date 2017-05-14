@@ -17,7 +17,7 @@ class MonteCarlo:
             if p.name == name:
                 self.aiplayer = p
         self.states = []
-        seconds = kwargs.get('time', 5)
+        seconds = kwargs.get('time', Variables.monteCarloTime)
         self.calculation_time = datetime.timedelta(seconds=seconds)
         self.max_moves = kwargs.get('max_moves',100)
         self.max_depth = 0

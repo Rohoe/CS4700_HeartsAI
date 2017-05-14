@@ -45,7 +45,7 @@ class Hearts:
 		oneMonte_allHuman = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
 							  Player("Human 3", PlayerTypes.Human, self), Player("Human 4", PlayerTypes.Human, self)]
 		
-		thePlayers = allRandom
+		thePlayers = oneMonte_allRandom
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
 		self.dealer = -1 # so that first dealer is 0
@@ -62,7 +62,6 @@ class Hearts:
 		self.cardsPlayed = () #keep track of state in a tuple
 
 		#self.passingCards = [[], [], [], []]
-
 
 		# Make four players
 
@@ -514,7 +513,7 @@ def main():
 	# numWins = runGames(numGames)
 
 	#parallelize
-	numThreads = 4
+	numThreads = Variables.numThreads
 	gamesPerThread = int(floor(numGames / numThreads))
 
 	#assign games per thread

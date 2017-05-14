@@ -9,4 +9,9 @@ spades = 2
 hearts = 3
 
 printsOn = False
-printsOnMonte = True
+printsOnMonte = False
+
+numThreads = 4
+
+#time allowed for monteCarloAI
+monteCarloTime = 1
