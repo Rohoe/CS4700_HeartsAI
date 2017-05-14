@@ -235,8 +235,6 @@ class Player:
 			card = self.naiveMaxAIPlay()
 		elif self.type == PlayerTypes.MonteCarloAI:
 			card = self.monteCarloAIPlay()
-
-		print(self.gameState.cardsPlayedbyPlayer[self])
 		self.gameState.cardsPlayedbyPlayer[self].append(card)
 		return card
 

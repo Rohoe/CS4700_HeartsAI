@@ -50,7 +50,7 @@ class Hearts:
 		oneMonte_oneRandom = 	oneMonte_allRandom = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
 							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
 
-		thePlayers = oneNaiveMin_oneHuman
+		thePlayers = oneMonte_allNaive
 
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
