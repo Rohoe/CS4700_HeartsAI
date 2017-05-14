@@ -50,7 +50,7 @@ class Hearts:
 		oneMonte_oneRandom = 	oneMonte_allRandom = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
 							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
 
-		thePlayers = oneMonte_oneRandom
+		thePlayers = oneNaiveMin_oneHuman
 
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
@@ -67,6 +67,11 @@ class Hearts:
 		self.shift = 0
 
 		self.cardsPlayed = () #keep track of state in a tuple
+		temp = dict.fromkeys(thePlayers)
+		for key in temp:
+			temp[key] = []
+
+		self.cardsPlayedbyPlayer = temp
 
 		#self.passingCards = [[], [], [], []]
 
@@ -111,7 +116,10 @@ class Hearts:
 		print (trickStr)
 
 		#Cards played
-		print ("All cards played: %s" % (self.cardsPlayed,))
+		print ("All cards played by players")
+		print(self.cardsPlayedbyPlayer)
+		for player, cards in self.cardsPlayedbyPlayer.iteritems():
+			print (player.name + " " + str(cards))
 
 	#return array of players with lowest score
 	def roundWinners(self):

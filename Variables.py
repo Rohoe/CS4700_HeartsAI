@@ -12,10 +12,10 @@ hearts = 3
 printsOn = False
 printsOnMonte = False
 
-numThreads = 4
+numThreads = 2
 
 #time allowed for monteCarloAI
-monteCarloTime = 2
+monteCarloTime = 4
 
 #If true, monteAI only cares about the current round scores
 useRoundScoreOnly = False
