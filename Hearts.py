@@ -411,6 +411,8 @@ class Hearts:
 			if monteCarlo: 
 				if (self.trickNum >= totalTricks):
 					self.winningPlayers = self.roundWinners()
+					self.handleScoring()
+					self.winningPlayer = self.getWinner()
 					# if Variables.printsOnMonte:
 					# 	print ("Game over: Winner is %s" % self.winningPlayer)
 					# 	print ("Score: %s" % self.winningPlayer.roundscore)

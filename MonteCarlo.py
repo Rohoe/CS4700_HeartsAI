@@ -26,6 +26,9 @@ class MonteCarlo:
         self.plays = {}
         self.C = kwargs.get('C', 1.4)
 
+        #parameters
+        self.useRoundScoreOnly = False
+
     def redistribute(self, board):
         #gets all cards from players
         # if printsOn:
@@ -172,7 +175,13 @@ class MonteCarlo:
 
             visited_states.add((player,state))
 
-            winners = board.winningPlayers
+            winners = None
+            if self.useRoundScoreOnly:
+                winners = board.winningPlayers
+            else:
+                if board.winningPlayer is not None:
+                    winners = [board.winningPlayer]
+
             if winners:
                 break
 
