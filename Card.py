@@ -33,6 +33,9 @@ class Card:
 	def __repr__(self):
 		return self.__str__()
 
+	def __hash__(self):
+		return hash(repr(self))
+
 '''
 Suit identification (iden)
 0: clubs

@@ -18,6 +18,9 @@ class MonteCarlo:
         self.calculation_time = datetime.timedelta(seconds=seconds)
         self.max_moves = kwargs.get('max_moves',100)
 
+        self.wins = {}
+        self.plays = {}
+
     def redistribute(self, board):
         #gets all cards from players
         # if printsOn:
@@ -56,27 +59,54 @@ class MonteCarlo:
 
     def getPlay(self):
         begin = datetime.datetime.utcnow()
+        iterations = 0
         while datetime.datetime.utcnow() - begin < self.calculation_time:
-            # if printsOn:
-            #     print("Time Elapsed: %s" % (datetime.datetime.utcnow() - begin))
+            if printsOnMonte:
+                print("Iteration %s" % iterations)
             self.runSimulation()
+            iterations += 1
+            # raw_input("Enter to continue")
+
+
+
         return 
 
     def runSimulation(self):
+        visited_states = set()
         states_copy = self.states[:]
         state = states_copy[-1]
         board = copy.deepcopy(self.gameState)
         self.redistribute(board)
 
+        expand = True
         for t in xrange(self.max_moves):
-            curPlayer = board.getCurrentPlayer()
-            legal = board.getLegalPlays(curPlayer)
+            player = board.getCurrentPlayer()
+            legal = board.getLegalPlays(player)
             card = choice(legal)
-            board.step(card, curPlayer)
+            board.step(card, player)
             state = board.cardsPlayed
             states_copy.append(state)
+
+            if expand and (player, state) not in self.plays:
+                expand = False
+                self.plays[(player, state)] = 0
+                self.wins[(player, state)] = 0
+
+            visited_states.add((player,state))
 
             winner = board.winningPlayer
             if winner:
                 break
+
+        if printsOnMonte:
+            print ("Winner of simulation: %s" % winner.name)
+
+        for player, state in visited_states:
+            if (player, state) not in self.plays:
+                continue
+            self.plays[(player, state)] += 1
+            if player == winner:
+                self.wins[(player,state)] += 1
+
+
         return
