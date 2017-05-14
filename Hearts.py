@@ -47,7 +47,7 @@ class Hearts:
 		oneMonte_allNaive = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("NaiveMin 2", PlayerTypes.NaiveMinAI, self),
 							  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI, self), Player("NaiveMin 4", PlayerTypes.NaiveMinAI, self)]
 
-		oneMonte_oneRandom = 	oneMonte_allRandom = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
+		oneMonte_oneHuman =  [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
 							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
 
 		thePlayers = oneMonte_allNaive
@@ -443,7 +443,7 @@ class Hearts:
 				print ('\nPlaying trick number', self.trickNum)
 				self.printCurrentTrick()
 			#end game and evaluate winner if round is over
-			if monteCarlo: 
+			if monteCarlo:
 				if (self.trickNum >= totalTricks):
 					self.winningPlayers = self.roundWinners()
 					self.handleScoring()
@@ -486,7 +486,7 @@ class Hearts:
 							self.heartsBroken = True
 						if addCard.suit == Suit(spades) and addCard.rank == Rank(queen):
 							self.heartsBroken = True
-			
+
 
 
 			self.step(addCard,curPlayer)
@@ -567,7 +567,7 @@ def main():
 			if(numGames < 0):
 				print("Not a valid number. Try again.")
 			else:
-				break			
+				break
 		except ValueError:
 			print("Not a valid number. Try again.")
 
