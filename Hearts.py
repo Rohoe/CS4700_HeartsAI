@@ -47,7 +47,7 @@ class Hearts:
 		oneMonte_allNaive = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("NaiveMin 2", PlayerTypes.NaiveMinAI, self),
 							  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI, self), Player("NaiveMin 4", PlayerTypes.NaiveMinAI, self)]
 
-		thePlayers = oneMonte_allRandom
+		thePlayers = allRandom
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
 		self.dealer = -1 # so that first dealer is 0
@@ -485,6 +485,11 @@ class Hearts:
 				if Variables.printsOn:
 					print ("New round")
 				hearts.newRound()
+
+			#End game if max rounds reached
+			if self.roundNum >= Variables.maxRounds:
+				winner = hearts.getWinner()
+				return winner
 
 		if Variables.printsOn:
 			print # spacing
