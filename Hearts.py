@@ -87,11 +87,11 @@ class Hearts:
 
 	#return array of players with lowest score
 	def roundWinners(self):
-		winners = set()
+		winners = []
 		for player in self.players:
 			if player.roundscore == 26:
 				shotMoon = True
-				winners.add(player)
+				winners.append(player)
 				return winners
 
 		minScore = 200 # impossibly high
@@ -101,11 +101,11 @@ class Hearts:
 				winner = p
 				minScore = p.roundscore
 
-		winners.add(winner)
+		winners.append(winner)
 		#check for a draw
 		for p in self.players:
 			if p != winner and p.roundscore == minScore:
-				winners.add(p)
+				winners.append(p)
 		return winners
 
 	def handleScoring(self, suppressPrints = False):
@@ -534,31 +534,31 @@ def main():
 
 	# Play numGames and store the number of times each player has won
 	# Player names must be unique
-	# numWins = runGames(numGames)
+	numWins = runGames(numGames)
 
-	#parallelize
-	# numThreads = Variables.numThreads
-	# gamesPerThread = int(floor(numGames / numThreads))
+	# parallelize
+	numThreads = Variables.numThreads
+	gamesPerThread = int(floor(numGames / numThreads))
 
-	# #assign games per thread
-	# threadGames = []
-	# gamesAssigned = 0
-	# for i in range(0,numThreads):
-	# 	if (i != numThreads - 1):
-	# 		threadGames.append(gamesPerThread)
-	# 		gamesAssigned += gamesPerThread
-	# 	else:
-	# 		gamesLeft = numGames - gamesAssigned
-	# 		threadGames.append(gamesLeft)
-	# 		gamesAssigned += gamesLeft
+	#assign games per thread
+	threadGames = []
+	gamesAssigned = 0
+	for i in range(0,numThreads):
+		if (i != numThreads - 1):
+			threadGames.append(gamesPerThread)
+			gamesAssigned += gamesPerThread
+		else:
+			gamesLeft = numGames - gamesAssigned
+			threadGames.append(gamesLeft)
+			gamesAssigned += gamesLeft
 
-	# pool = ThreadPool(numThreads)
-	# results = pool.map(runGames, threadGames)
-	# pool.close()
-	# pool.join()
+	pool = ThreadPool(numThreads)
+	results = pool.map(runGames, threadGames)
+	pool.close()
+	pool.join()
 
-	results = []
-	results.append(runGames(numGames))
+	# results = []
+	# results.append(runGames(numGames))
 
 	#aggregate results
 	thePlayers = results[-1].keys()
