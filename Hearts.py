@@ -43,7 +43,7 @@ class Hearts:
 		oneMonte_allHuman = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
 							  Player("Human 3", PlayerTypes.Human, self), Player("Human 4", PlayerTypes.Human, self)]
 		
-		thePlayers = oneMonte_allHuman
+		thePlayers = oneHuman
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
 		self.dealer = -1 # so that first dealer is 0
@@ -177,7 +177,6 @@ class Hearts:
 
 
 	def playersPassCards(self):
-
 		self.printPlayers()
 		if not self.trickNum % 4 == 3: # don't pass every fourth hand
 			for i in range(0, len(self.players)):
@@ -187,6 +186,16 @@ class Hearts:
 
 			self.distributePassedCards()
 			self.printPlayers()
+
+	#return flat array of cards
+	def getLegalPlays(self, player):
+		validHand = []
+		for suit in range(0,4):
+			handSuit = player.hand.hand[suit]
+			for card in handSuit:
+				if self.isValidCard(card,player):
+ 					validHand.append(card)
+		return validHand
 
 	#Check if a card is a valid play in the current state
 	def isValidCard(self, card, player):

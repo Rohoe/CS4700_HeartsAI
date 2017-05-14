@@ -1,5 +1,5 @@
 from __future__ import print_function
-from random import randint
+from random import randint, choice
 from Hand import Hand
 from PlayerTypes import PlayerTypes
 from MonteCarlo import MonteCarlo
@@ -56,18 +56,18 @@ class Player:
 
 	def randomPlay(self):
 		#get list of valid cards
-		gameState = self.gameState
-		validClubs = []
-		validDiamonds = []
-		validSpades = []
-		validHearts = []
-		validHand = [validClubs, validDiamonds, validSpades, validHearts]
-		for suit in range(0,4):
-			handSuit = self.hand.hand[suit]
-			for card in handSuit:
-				if gameState.isValidCard(card,self):
- 					validHand[suit].append(card)
-		return Hand.randomCard(validHand)
+		# gameState = self.gameState
+		# validClubs = []
+		# validDiamonds = []
+		# validSpades = []
+		# validHearts = []
+		# validHand = [validClubs, validDiamonds, validSpades, validHearts]
+		# for suit in range(0,4):
+		# 	handSuit = self.hand.hand[suit]
+		# 	for card in handSuit:
+		# 		if gameState.isValidCard(card,self):
+ 	# 				validHand[suit].append(card)
+		return choice(self.gameState.getLegalPlays(self))
 
 		# return self.hand.getRandomCard()
 

@@ -57,8 +57,8 @@ class MonteCarlo:
     def getPlay(self):
         begin = datetime.datetime.utcnow()
         while datetime.datetime.utcnow() - begin < self.calculation_time:
-            if printsOn:
-                print("Time Elapsed: %s" % (datetime.datetime.utcnow() - begin))
+            # if printsOn:
+            #     print("Time Elapsed: %s" % (datetime.datetime.utcnow() - begin))
             self.runSimulation()
         return 
 
