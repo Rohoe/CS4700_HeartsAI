@@ -43,7 +43,7 @@ class Hearts:
 		oneMonte_allHuman = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
 							  Player("Human 3", PlayerTypes.Human, self), Player("Human 4", PlayerTypes.Human, self)]
 		
-		thePlayers = oneHuman
+		thePlayers = oneMonte_allHuman
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
 		self.dealer = -1 # so that first dealer is 0
@@ -54,6 +54,7 @@ class Hearts:
 		self.trickWinner = -1
 		self.heartsBroken = False
 		self.losingPlayer = None
+		self.winningPlayer = None
 		self.shift = 0
 
 		self.cardsPlayed = () #keep track of state in a tuple
@@ -375,6 +376,12 @@ class Hearts:
 			self.evaluateTrick()
 			self.trickNum += 1
 			self.shift = 0
+			if printsOn:
+				print ('\nPlaying trick number', self.trickNum)
+				self.printCurrentTrick()
+			#end game and evaluate winner
+			if (self.trickNum > totalTricks):
+				self.winningPlayer = hearts.getWinner()
 
 	def playTrickStepping(self, start):
 		if self.trickNum == 0:
@@ -387,7 +394,7 @@ class Hearts:
 			self.printCurrentTrick()
 
 			if printsOn:
-				print ("Current player: %s" % self.getCurrentPlayer(self.trickWinner))
+				print ("Current player: %s" % self.getCurrentPlayer())
 
 			curPlayerIndex = i % len(self.players)
 			self.printPlayer(curPlayerIndex)
@@ -461,8 +468,8 @@ class Hearts:
 		return winner
 
 	#returns the current player
-	def getCurrentPlayer(self, trickWinner):
-		return self.players[self.currentTrick.getCurrentPlayer(trickWinner)]
+	def getCurrentPlayer(self):
+		return self.players[self.currentTrick.getCurrentPlayer(self.trickWinner)]
 
 	def getDeepCopy(self):
 		return Hearts(self)

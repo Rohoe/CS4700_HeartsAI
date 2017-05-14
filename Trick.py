@@ -55,12 +55,12 @@ class Trick:
 			if card.rank.rank > self.highest:
 				self.highest = card.rank.rank
 				self.winner = index
-				if printsOn:
-					print "Highest:",self.highest
+				# if printsOn:
+				# 	print "Highest:",self.highest
 
 	def getCurrentPlayer(self,trickWinner):
-		if printsOn:
-			print ("Getting current player, trick winner is %s" % trickWinner)
+		# if printsOn:
+		# 	print ("Getting current player, trick winner is %s" % trickWinner)
 
 		trick = self.trick
 		ind = trickWinner

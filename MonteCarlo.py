@@ -68,8 +68,15 @@ class MonteCarlo:
         board = copy.deepcopy(self.gameState)
         self.redistribute(board)
 
-        # for t in xrange(self.max_moves):
+        for t in xrange(self.max_moves):
+            curPlayer = board.getCurrentPlayer()
+            legal = board.getLegalPlays(curPlayer)
+            card = choice(legal)
+            board.step(card, curPlayer)
+            state = board.cardsPlayed
+            states_copy.append(state)
 
-
-
+            winner = board.winningPlayer
+            if winner:
+                break
         return
