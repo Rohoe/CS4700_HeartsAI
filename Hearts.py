@@ -380,8 +380,8 @@ class Hearts:
 				print ('\nPlaying trick number', self.trickNum)
 				self.printCurrentTrick()
 			#end game and evaluate winner
-			if (self.trickNum > totalTricks):
-				self.winningPlayer = hearts.getWinner()
+			if (self.trickNum >= totalTricks):
+				self.winningPlayer = self.getWinner()
 
 	def playTrickStepping(self, start):
 		if self.trickNum == 0:
