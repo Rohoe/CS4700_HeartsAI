@@ -44,7 +44,7 @@ class Hearts:
 		oneMonte_allHuman = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
 							  Player("Human 3", PlayerTypes.Human, self), Player("Human 4", PlayerTypes.Human, self)]
 		
-		thePlayers = oneMonte_allRandom
+		thePlayers = allRandom
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
 		self.dealer = -1 # so that first dealer is 0
@@ -482,6 +482,17 @@ class Hearts:
 	def getDeepCopy(self):
 		return Hearts(self)
 
+def runGames(numGames):
+	numWins = None
+	thePlayers = None
+	for i in range(0,numGames):
+		hearts = Hearts()
+		if numWins is None:
+			thePlayers = hearts.players
+			numWins = {thePlayers[0].name:0, thePlayers[1].name:0, thePlayers[2].name:0, thePlayers[3].name:0}
+		winningPlayer = hearts.playGameStepping()
+		numWins[winningPlayer.name] += 1
+	return numWins
 
 def main():
 
@@ -497,26 +508,20 @@ def main():
 
 	# Play numGames and store the number of times each player has won
 	# Player names must be unique
-	numWins = None
-	thePlayers = None
-	for i in range(0,numGames):
-		hearts = Hearts()
-		if numWins is None:
-			thePlayers = hearts.players
-			numWins = {thePlayers[0].name:0, thePlayers[1].name:0, thePlayers[2].name:0, thePlayers[3].name:0}
-		winningPlayer = hearts.playGameStepping()
-		numWins[winningPlayer.name] += 1
+	numWins = runGames(numGames)
+
+	thePlayers = numWins.keys()
 
 	#Timing end
 	end = timer()
 
-	p0 = thePlayers[0].name
+	p0 = thePlayers[0]
 	p0_wins = numWins[p0]
-	p1 = thePlayers[1].name
+	p1 = thePlayers[1]
 	p1_wins = numWins[p1]
-	p2 = thePlayers[2].name
+	p2 = thePlayers[2]
 	p2_wins = numWins[p2]
-	p3 = thePlayers[3].name
+	p3 = thePlayers[3]
 	p3_wins = numWins[p3]
 	print("-----------------------")
 	print("Win Rates (Total Games:", numGames, ")")
