@@ -1,6 +1,5 @@
-from __future__ import print_function
+from __future__ import print_function, division
 from timeit import default_timer as timer
-
 from Deck import Deck
 from Card import Card, Suit, Rank
 from Player import Player
@@ -9,6 +8,8 @@ from PlayerTypes import PlayerTypes
 from Variables import *
 import Variables
 import Hand
+from multiprocessing import Pool as ThreadPool
+from math import floor
 
 '''
 Change auto to False if you would like to play the game manually.
@@ -495,11 +496,13 @@ def runGames(numGames):
 	return numWins
 
 def main():
-
 	while True:
 		try:
 			numGames = int(raw_input("How many games to play?\n"),10)
-			break
+			if(numGames < 0):
+				print("Not a valid number. Try again.")
+			else:
+				break			
 		except ValueError:
 			print("Not a valid number. Try again.")
 
@@ -508,21 +511,50 @@ def main():
 
 	# Play numGames and store the number of times each player has won
 	# Player names must be unique
-	numWins = runGames(numGames)
+	# numWins = runGames(numGames)
 
-	thePlayers = numWins.keys()
+	#parallelize
+	numThreads = 4
+	gamesPerThread = int(floor(numGames / numThreads))
+
+	#assign games per thread
+	threadGames = []
+	gamesAssigned = 0
+	for i in range(0,numThreads):
+		if (i != numThreads - 1):
+			threadGames.append(gamesPerThread)
+			gamesAssigned += gamesPerThread
+		else:
+			gamesLeft = numGames - gamesAssigned
+			threadGames.append(gamesLeft)
+			gamesAssigned += gamesLeft
+
+	pool = ThreadPool(numThreads)
+	results = pool.map(runGames, threadGames)
+	pool.close()
+	pool.join()
+
+	#aggregate results
+	thePlayers = results[-1].keys()
+	p0 = thePlayers[0]
+	p1 = thePlayers[1]
+	p2 = thePlayers[2]
+	p3 = thePlayers[3]
+	p0_wins = 0
+	p1_wins = 0
+	p2_wins = 0
+	p3_wins = 0
+	for r in results:
+		if r is not None:
+			p0_wins += r[p0]
+			p1_wins += r[p1]
+			p2_wins += r[p2]
+			p3_wins += r[p3]
 
 	#Timing end
 	end = timer()
 
-	p0 = thePlayers[0]
-	p0_wins = numWins[p0]
-	p1 = thePlayers[1]
-	p1_wins = numWins[p1]
-	p2 = thePlayers[2]
-	p2_wins = numWins[p2]
-	p3 = thePlayers[3]
-	p3_wins = numWins[p3]
+
 	print("-----------------------")
 	print("Win Rates (Total Games:", numGames, ")")
 	print("-----------------------")
