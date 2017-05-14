@@ -116,9 +116,8 @@ class Hearts:
 		print (trickStr)
 
 		#Cards played
-		print ("All cards played by players")
-		print(self.cardsPlayedbyPlayer)
-		for player, cards in self.cardsPlayedbyPlayer.iteritems():
+		print ("Cards played so far by player: ")
+		for player, cards in reversed(self.cardsPlayedbyPlayer.items()):
 			print (player.name + " " + str(cards))
 
 	#return array of players with lowest score
