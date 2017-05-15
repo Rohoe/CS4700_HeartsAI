@@ -46,11 +46,14 @@ class Hearts:
 							  Player("Human 3", PlayerTypes.Human, self), Player("Human 4", PlayerTypes.Human, self)]
 		oneMonte_allNaive = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("NaiveMin 2", PlayerTypes.NaiveMinAI, self),
 							  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI, self), Player("NaiveMin 4", PlayerTypes.NaiveMinAI, self)]
-
 		oneMonte_oneHuman =  [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
 							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
+		oneMonte_oneHuman_twoNaive = [Player("NaiveMin 1  ", PlayerTypes.NaiveMinAI, self), Player("MonteCarlo 2", PlayerTypes.MonteCarloAI, self),
+							  				       Player("Human 3     ", PlayerTypes.Human, self), Player("NaiveMax 4  ", PlayerTypes.NaiveMaxAI, self)]
 
-		thePlayers = oneMonte_allNaive
+
+
+		thePlayers = oneMonte_oneHuman_twoNaive
 
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
@@ -177,7 +180,11 @@ class Hearts:
 		self.currentTrick = Trick()
 		self.allTricks = []
 		#self.passingCards = [[], [], [], []]
-		self.cardsPlayed = ()
+		self.cardsPlayed = () #keep track of state in a tuple
+		temp = dict.fromkeys(self.players)
+		for key in temp:
+			temp[key] = []
+		self.cardsPlayedbyPlayer = temp
 		for p in self.players:
 			p.discardTricks()
 
@@ -430,6 +437,7 @@ class Hearts:
 	def step(self, card, player, monteCarlo = False):
 		#add card to state
 		self.cardsPlayed = self.cardsPlayed + (card,)
+		self.cardsPlayedbyPlayer[player].append(card)
 
 		player.removeCard(card)
 		start = (self.trickWinner + self.shift) % len(self.players)

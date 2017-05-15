@@ -235,7 +235,6 @@ class Player:
 			card = self.naiveMaxAIPlay()
 		elif self.type == PlayerTypes.MonteCarloAI:
 			card = self.monteCarloAIPlay()
-		self.gameState.cardsPlayedbyPlayer[self].append(card)
 		return card
 
 	def trickWon(self, trick):
