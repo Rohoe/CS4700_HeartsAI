@@ -113,15 +113,18 @@ class Hearts:
 			print (player.name + " round score: " + str(player.roundscore) + ", total score: " + str(player.score))
 
 		#Trick
-		print ('\nPlaying trick number', self.trickNum)
+		print ('\nPlaying trick number', self.trickNum, "\n")
+		print ("Trick winner: " + self.players[self.trickWinner].name)
+		print ("Trick suit: " + self.currentTrick.suit.__str__())
 
 		trickStr = '\nCurrent table:\n'
-		trickStr += "Trick suit: " + self.currentTrick.suit.__str__() + "\n"
+		trickStr += "--------------------\n"
 		for i, card in enumerate(self.currentTrick.trick):
 			if self.currentTrick.trick[i] is not 0:
 				trickStr += self.players[i].name + ": " + str(card) + "\n"
 			else:
 				trickStr += self.players[i].name + ": None\n"
+		trickStr += "--------------------\n"
 		print (trickStr)
 
 		#Cards played
@@ -383,6 +386,7 @@ class Hearts:
 	def printCurrentTrick(self):
 		trickStr = '\nCurrent table:\n'
 		trickStr += "Trick suit: " + self.currentTrick.suit.__str__() + "\n"
+		trickStr += "Trick winner: " + self.players[self.trickWinner].name + "\n"
 		for i, card in enumerate(self.currentTrick.trick):
 			if self.currentTrick.trick[i] is not 0:
 				trickStr += self.players[i].name + ": " + str(card) + "\n"

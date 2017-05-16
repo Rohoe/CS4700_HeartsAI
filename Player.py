@@ -49,7 +49,8 @@ class Player:
 			#display game information
 			self.gameState.printGameState()
 			print()
-			print("Your hand: %s: " % self.hand)
+			print("Your hand: ", self.hand)
+			# print("Your legal plays: %s" % self.gameState.getLegalPlays(self))
 			card = raw_input(self.name + ", select a card to " + option + ": ")
 		return card
 

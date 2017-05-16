@@ -23,7 +23,7 @@ class Hand:
 		self.contains2ofclubs = False
 
 	def __str__(self):
-		return (self.clubs.__str__() + "|" + self.diamonds.__str__() + "|"  + self.spades.__str__() + "|"  + self.hearts.__str__())
+		return (self.clubs.__str__() + " , " + self.diamonds.__str__() + " , "  + self.spades.__str__() + " , "  + self.hearts.__str__())
 	
 	def size(self):
 		return len(self.clubs) + len(self.diamonds) + len(self.spades) + len(self.hearts)
@@ -137,12 +137,12 @@ class Hand:
 		# print "self.size():",self.size()
 		return len(self.hearts) == self.size()
 
-	def __str__(self):
-		handStr = ''
-		for suit in self.hand:
-			for card in suit:
-				handStr += card.__str__() + ' '
-		return handStr
+	# def __str__(self):
+	# 	handStr = ''
+	# 	for suit in self.hand:
+	# 		for card in suit:
+	# 			handStr += card.__str__() + ' '
+	# 	return handStr
 
 #-----------------NEW METHODS-----------------------
 
