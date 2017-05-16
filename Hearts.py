@@ -57,6 +57,11 @@ class Hearts:
 
 		thePlayers = oneHuman
 
+		self.humanExists = False
+		for p in thePlayers:
+			if p.type == PlayerTypes.Human:
+				self.humanExists = True
+
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
 		self.dealer = -1 # so that first dealer is 0
@@ -420,9 +425,11 @@ class Hearts:
 					print ("New round")
 				hearts.newRound()
 
-		if Variables.printsOn:
+		if Variables.printsOn or self.humanExists:
 			print # spacing
 			print (hearts.getWinner().name, "wins!")
+			for p in self.players:
+				print 
 
 		winner = hearts.getWinner()
 
@@ -502,6 +509,17 @@ class Hearts:
 			if Variables.printsOn:
 				print ("Cards played: %s" % (self.cardsPlayed,))
 
+	def printGameOver(self, msg = ""):
+		if Variables.printsOn or self.humanExists:
+			print ("\n")
+			print ("Game over: %s" % msg)
+			print (self.getWinner().name, "wins!")
+			print ("-------------")
+			print ("Final Scores:")
+			print ("-------------")
+			for player in self.players:
+				print (player.name + ": " + str(player.score))
+
 	def playGameStepping(self):
 		hearts = self
 		# play until someone loses
@@ -533,11 +551,8 @@ class Hearts:
 			#End game if max rounds reached
 			if self.roundNum >= Variables.maxRounds:
 				winner = hearts.getWinner()
+				self.printGameOver()
 				return winner
-
-		if Variables.printsOn:
-			print # spacing
-			print (hearts.getWinner().name, "wins!")
 
 		winner = hearts.getWinner()
 
@@ -548,6 +563,7 @@ class Hearts:
 			p.hand = Hand.Hand()
 			p.tricksWon = []
 
+		self.printGameOver()
 		return winner
 
 	#returns the current player
@@ -590,31 +606,39 @@ def main():
 
 	# Play numGames and store the number of times each player has won
 	# Player names must be unique
+
+	# Parallelism:
+	# If there is a human player, do not parallelize
+
+
 	# numWins = runGames(numGames)
 
-	# parallelize
-	numThreads = Variables.numThreads
-	gamesPerThread = int(floor(numGames / numThreads))
+	if Variables.parallelize:
+		numThreads = min(Variables.numThreads,numGames)
 
-	#assign games per thread
-	threadGames = []
-	gamesAssigned = 0
-	for i in range(0,numThreads):
-		if (i != numThreads - 1):
-			threadGames.append(gamesPerThread)
-			gamesAssigned += gamesPerThread
-		else:
-			gamesLeft = numGames - gamesAssigned
-			threadGames.append(gamesLeft)
-			gamesAssigned += gamesLeft
+		gamesPerThread = int(floor(numGames / numThreads))
 
-	pool = ThreadPool(numThreads)
-	results = pool.map(runGames, threadGames)
-	pool.close()
-	pool.join()
+		#assign games per thread
+		threadGames = []
+		gamesAssigned = 0
+		for i in range(0,numThreads):
+			if (i != numThreads - 1):
+				threadGames.append(gamesPerThread)
+				gamesAssigned += gamesPerThread
+			else:
+				gamesLeft = numGames - gamesAssigned
+				threadGames.append(gamesLeft)
+				gamesAssigned += gamesLeft
 
-	# results = []
-	# results.append(runGames(numGames))
+		print(threadGames)
+
+		pool = ThreadPool(numThreads)
+		results = pool.map(runGames, threadGames)
+		pool.close()
+		pool.join()
+	else:
+		results = []
+		results.append(runGames(numGames))
 
 	#aggregate results
 	thePlayers = results[-1].keys()

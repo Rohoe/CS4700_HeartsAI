@@ -2,7 +2,7 @@ auto = False
 
 totalTricks = 13 #Tricks per game
 maxScore = 26   #Maximum score in a game
-maxRounds = 100
+maxRounds = 1
 queen = 12
 noSuit = 0
 diamonds = 1
@@ -12,6 +12,7 @@ hearts = 3
 printsOn = False
 printsOnMonte = False
 
+parallelize = False
 numThreads = 1
 
 #time allowed for monteCarloAI in seconds
