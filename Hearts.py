@@ -10,6 +10,7 @@ import Variables
 import Hand
 from multiprocessing import Pool as ThreadPool
 from math import floor
+import traceback
 
 '''
 Change auto to False if you would like to play the game manually.
@@ -44,16 +45,17 @@ class Hearts:
 							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
 		oneMonte_allHuman = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
 							  Player("Human 3", PlayerTypes.Human, self), Player("Human 4", PlayerTypes.Human, self)]
-		oneMonte_allNaive = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("NaiveMin 2", PlayerTypes.NaiveMinAI, self),
+		oneMonte_allNaiveMin = [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("NaiveMin 2", PlayerTypes.NaiveMinAI, self),
 							  				       Player("NaiveMin 3", PlayerTypes.NaiveMinAI, self), Player("NaiveMin 4", PlayerTypes.NaiveMinAI, self)]
 		oneMonte_oneHuman =  [Player("MonteCarlo 1", PlayerTypes.MonteCarloAI, self), Player("Human 2", PlayerTypes.Human, self),
 							  				  Player("Random 3", PlayerTypes.Random, self), Player("Random 4", PlayerTypes.Random, self)]
 		oneMonte_oneHuman_twoNaive = [Player("NaiveMin 1  ", PlayerTypes.NaiveMinAI, self), Player("MonteCarlo 2", PlayerTypes.MonteCarloAI, self),
 							  				       Player("Human 3     ", PlayerTypes.Human, self), Player("NaiveMax 4  ", PlayerTypes.NaiveMaxAI, self)]
 
+		oneMonte_oneHuman_twoNaive_anon = [Player("AI 1  ", PlayerTypes.NaiveMinAI, self), Player("AI 2 ", PlayerTypes.MonteCarloAI, self),
+							  				       			   Player("Human ", PlayerTypes.Human, self), Player("AI 4  ", PlayerTypes.NaiveMaxAI, self)]
 
-
-		thePlayers = oneMonte_oneHuman_twoNaive
+		thePlayers = oneHuman
 
 		self.roundNum = 0
 		self.trickNum = 0 # initialization value such that first round is round 0
@@ -73,7 +75,6 @@ class Hearts:
 		temp = dict.fromkeys(thePlayers)
 		for key in temp:
 			temp[key] = []
-
 		self.cardsPlayedbyPlayer = temp
 
 		#self.passingCards = [[], [], [], []]
@@ -557,22 +558,27 @@ class Hearts:
 		return Hearts(self)
 
 def runGames(numGames):
-	numWins = None
-	thePlayers = None
-	for i in range(0,numGames):
-		hearts = Hearts()
-		if numWins is None:
-			thePlayers = hearts.players
-			numWins = {thePlayers[0].name:0, thePlayers[1].name:0, thePlayers[2].name:0, thePlayers[3].name:0}
-		winningPlayer = hearts.playGameStepping()
-		numWins[winningPlayer.name] += 1
-	return numWins
+	try:
+		numWins = None
+		thePlayers = None
+		for i in range(0,numGames):
+			hearts = Hearts()
+			if numWins is None:
+				thePlayers = hearts.players
+				numWins = {thePlayers[0].name:0, thePlayers[1].name:0, thePlayers[2].name:0, thePlayers[3].name:0}
+			winningPlayer = hearts.playGameStepping()
+			numWins[winningPlayer.name] += 1
+		return numWins
+	except Exception:
+		print("Exception in worker:")
+		traceback.print_exc()
+		raise
 
 def main():
 	while True:
 		try:
 			numGames = int(raw_input("How many games to play?\n"),10)
-			if(numGames < 0):
+			if(numGames <= 0):
 				print("Not a valid number. Try again.")
 			else:
 				break
@@ -584,7 +590,7 @@ def main():
 
 	# Play numGames and store the number of times each player has won
 	# Player names must be unique
-	numWins = runGames(numGames)
+	# numWins = runGames(numGames)
 
 	# parallelize
 	numThreads = Variables.numThreads
