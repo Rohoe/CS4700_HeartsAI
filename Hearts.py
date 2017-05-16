@@ -11,6 +11,7 @@ import Hand
 from multiprocessing import Pool as ThreadPool
 from math import floor
 import traceback
+import random
 
 '''
 Change auto to False if you would like to play the game manually.
@@ -56,6 +57,8 @@ class Hearts:
 							  				       			   Player("Human ", PlayerTypes.Human, self), Player("AI 4  ", PlayerTypes.NaiveMaxAI, self)]
 
 		thePlayers = oneHuman
+		#Shake up the order
+		random.shuffle(thePlayers)
 
 		self.humanExists = False
 		for p in thePlayers:

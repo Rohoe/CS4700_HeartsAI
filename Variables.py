@@ -1,8 +1,8 @@
 auto = False
 
 totalTricks = 13 #Tricks per game
-maxScore = 26   #Maximum score in a game
-maxRounds = 1
+maxScore = 50   #Maximum score in a game
+maxRounds = 100
 queen = 12
 noSuit = 0
 diamonds = 1
