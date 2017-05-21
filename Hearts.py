@@ -12,6 +12,7 @@ from multiprocessing import Pool as ThreadPool
 from math import floor
 import traceback
 import random
+import sys
 
 '''
 Change auto to False if you would like to play the game manually.
@@ -134,6 +135,9 @@ class Hearts:
 		print ("Cards played so far by player: ")
 		for player, cards in reversed(self.cardsPlayedbyPlayer.items()):
 			print (player.name + " " + str(cards))
+
+		#Flush
+		sys.stdout.flush()
 
 	#return array of players with lowest score
 	def roundWinners(self):
