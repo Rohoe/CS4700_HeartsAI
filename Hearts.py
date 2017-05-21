@@ -56,7 +56,7 @@ class Hearts:
 		oneMonte_oneHuman_twoNaive_anon = [Player("AI 1  ", PlayerTypes.NaiveMinAI, self), Player("AI 2 ", PlayerTypes.MonteCarloAI, self),
 							  				       			   Player("Human ", PlayerTypes.Human, self), Player("AI 4  ", PlayerTypes.NaiveMaxAI, self)]
 
-		thePlayers = oneHuman
+		thePlayers = oneMonte_oneHuman_twoNaive_anon
 		#Shake up the order
 		random.shuffle(thePlayers)
 
