@@ -562,6 +562,7 @@ class Hearts:
 				return winner
 
 		winner = hearts.getWinner()
+		self.printGameOver()
 
 		#Game over: Reset all player fields
 		for p in self.players:
@@ -570,7 +571,6 @@ class Hearts:
 			p.hand = Hand.Hand()
 			p.tricksWon = []
 
-		self.printGameOver()
 		return winner
 
 	#returns the current player
