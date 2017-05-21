@@ -17,6 +17,3 @@ numThreads = 1
 
 #time allowed for monteCarloAI in seconds
 monteCarloTime = 10
-
-#If true, monteAI only cares about the current round scores
-useRoundScoreOnly = False

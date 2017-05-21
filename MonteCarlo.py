@@ -7,6 +7,7 @@ import datetime
 import copy
 from Variables import *
 import Variables
+import sys
 
 class MonteCarlo:
     def __init__(self, gameState, name, **kwargs):
@@ -27,7 +28,7 @@ class MonteCarlo:
         self.C = kwargs.get('C', 1.4)
 
         #parameters
-        self.useRoundScoreOnly = Variables.useRoundScoreOnly
+        self.threshold_difference = 13
 
     def redistribute(self, board):
         #gets all cards from players
@@ -76,6 +77,24 @@ class MonteCarlo:
         state = self.states[-1]
         player = self.gameState.getCurrentPlayer()
         legal = self.gameState.getLegalPlays(player)
+
+        #If very far ahead or very far behind, use round score only, else use game score
+        threshold_difference = 13
+
+        min_score = sys.maxint
+        max_score = -sys.maxint - 1
+        for p in self.gameState.players:
+            if p.score < min_score:
+                min_score = p.score
+            if p.score > max_score:
+                max_score = p.score
+
+        if player.score - min_score >= self.threshold_difference or \
+           max_score - player.score >= self.threshold_difference:
+            self.useRoundScoreOnly = True
+        else:
+            self.useRoundScoreOnly = False
+
 
         #return early if no choice to be made
         if len(legal) == 0:
