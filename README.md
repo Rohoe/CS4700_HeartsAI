@@ -8,4 +8,5 @@ To run the game, you will need python 2.7.
 
 Credits:
 Base game of Hearts modified from the version found here: https://github.com/danielcorin/Hearts
+
 Monte Carlo Tree Search implemented using information from: https://jeffbradberry.com/posts/2015/09/intro-to-monte-carlo-tree-search/
